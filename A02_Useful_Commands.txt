@@ -1,15 +1,18 @@
-# 1. General operation
-# Allow importing modules across different /Zxx folders
+[][][][][1]General operation
+[] 1.1 Allow importing modules across different /Zxx folders
 $env:PYTHONPATH = "."
 
-# 2. Virtual environment
-# Allow administrator privileges
-Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 
-# Activate virtual environment
+[][][][][2]Virtual environment
+[] 2.1 Allow administrator privileges
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+[] 2.2 Activate virtual environment
 .\pivdataprocessor\Scripts\Activate.ps1
 
-# 3. Git operation
-# Discard all local modifications and reset to the current released version
+
+[][][][][3]Git operation
+[] 3.1 Discard all local modifications and reset to the current released version
 git fetch origin
 git reset --hard origin/main
+git clean -fd
+
