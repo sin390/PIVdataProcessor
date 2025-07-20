@@ -1,4 +1,15 @@
-$env:PYTHONPATH="."
+# 1. General operation
+# Allow importing modules across different /Zxx folders
+$env:PYTHONPATH = "."
 
-git subtree push --prefix=tmp/core xxx_core main
-git subtree push --prefix=examples xxx_examples main
+# 2. Virtual environment
+# Allow administrator privileges
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+
+# Activate virtual environment
+.\pivdataprocessor\Scripts\Activate.ps1
+
+# 3. Git operation
+# Discard all local modifications and reset to the current released version
+git fetch origin
+git reset --hard origin/main
