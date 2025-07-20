@@ -1,0 +1,16 @@
+*
+
+!.gitignore          
+!README.md
+!A01_update_memo.txt
+!A02_Useful_Commands.txt
+
+!/pivdataprocessor
+!/pivdataprocessor/Lib
+!/pivdataprocessor/Lib/site-packages/
+!/pivdataprocessor/Lib/site-packages/**
+/pivdataprocessor/Lib/site-packages/pip*/
+**/__pycache__/
+
+!/Examples
+!/Examples/** 

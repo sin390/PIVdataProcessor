@@ -1,0 +1,5 @@
+c_points: 101
+Model spectrum parameters:
+integral_L: 0.02
+Re_lamda: 50
+epsilon: 45000.0

@@ -1,0 +1,13 @@
+
+Case: Case01
+Uncertainty of eta_avg : 0.0156
+Case: Case02
+Uncertainty of eta_avg : 0.0146
+Case: Case03
+Uncertainty of eta_avg : 0.0167
+Case: Case04
+Uncertainty of eta_avg : 0.0160
+Case: Case05
+Uncertainty of eta_avg : 0.0137
+Case: Case06
+Uncertainty of eta_avg : 0.0156

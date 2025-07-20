@@ -1,0 +1,13 @@
+
+Case: Case01
+Uncertainty of |S11|max : 78.7535
+Case: Case02
+Uncertainty of |S11|max : 20.5059
+Case: Case03
+Uncertainty of |S11|max : 3.2006
+Case: Case04
+Uncertainty of |S11|max : 35.5511
+Case: Case05
+Uncertainty of |S11|max : 105.7854
+Case: Case06
+Uncertainty of |S11|max : 35.7302

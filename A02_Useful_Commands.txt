@@ -1,0 +1,4 @@
+$env:PYTHONPATH="."
+
+git subtree push --prefix=tmp/core xxx_core main
+git subtree push --prefix=examples xxx_examples main
