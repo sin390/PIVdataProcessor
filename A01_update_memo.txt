@@ -8,29 +8,11 @@ Note that:
 All updates are forward-compatible and based on the immediately preceding version.
 
 Update history (Latest on top):
-=========================
-= Author:   HAN Zexu
-= Version:  1.1.2
-= Date:     2025/07/19
-+ File added in Z00 (06_divide_case.py)
-+ L02_extension_tmpl.py modified (Method: GTreport)
 
 =========================
 = Author:   HAN Zexu
-= Version:  1.1.1
-= Date:     2025/07/08
-Enable module imports across different subdirectories
+= Version:  1.0.0
+= Date:     2025/07/20
+Uploaded the framework to the Git repository.
 
-=========================
-= Author:   HAN Zexu
-= Version:  1.1.0
-= Date:     2025/06/02
-Functional Code Archive — Examples/HAN2025
-
-=========================
-= Author:   HAN Zexu
-= Version:  0.0.0
-= Date:     2025/??/??
-The story begins
-=========================
 
