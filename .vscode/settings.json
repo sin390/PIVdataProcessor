@@ -1,0 +1,7 @@
+{
+  "python.analysis.exclude": [
+    "**/Examples",
+    "**/S01_Cases",
+    "**/S02_Plots",
+  ]
+}
