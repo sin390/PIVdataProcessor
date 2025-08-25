@@ -23,12 +23,13 @@ figsize_inch = (cm_to_inch(16), cm_to_inch(5.5))
 
 fig_number = 1
 figs, axess = generatefiglist(fig_number, 1, 2, figsize_inch)
-xlables = [r'$k_{1}, k_{1}^*~\mathrm{(m^{-1})}$']
-ylables = [r'$E_{11}(k_{1}), E_{11}^*(k_{1}^*)$',r'$\frac{E_{11}(k_{1})}{k_1^{-5/3}}, \frac{E_{11}^*(k_{1}^*)}{k_1^{*~-5/3}}$']
-figtitles = ['RDT_E11']
+
+xlables = [r'$k_{1}~(\mathrm{m^{-1}})$']
+ylables = [r'$E_{11}(k_{1})~(\mathrm{m^{3}s^{-2}})$',r'$E_{11}(k_{1})/k_{1}^{-5/3}$']
+figtitles = ['E11']
 xlims = [(1e1,1e5)]
-xtricks = [1e1,1e2, 1e3, 1e4, 1e5]
-ylims = [(1e-7,1e1),(1e-3,1e3)]
+xtricks = [1e2, 1e3, 1e4, 1e5]
+ylims = [(1e-7,1e-1),(1e-3,1e3)]
 figformat = '.pdf'
 for fig_id in range(fig_number):
     for ax_id in range(2):
@@ -39,7 +40,6 @@ for fig_id in range(fig_number):
         axconfig.xlim = xlims[0]
         axconfig.xticks = xtricks
         axconfig.ylim = ylims[ax_id]
-
         axconfig.apply()
 
 # -------------------------------------------------------------------------
@@ -52,30 +52,43 @@ Pope.load_E11k1(c=0.25)
 'fig1'
 ax = axess[0][0]
 ax.set_xscale('log')
-ax.set_xticks(xtricks)
+ax.set_xticks([1e1, 1e2, 1e3, 1e4, 1e5])
 ax.set_yscale('log')
-ax.set_yticks([1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1,1e0])
-
+ax.set_yticks([1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1])
+ax.plot(Pope.k_long, Pope.E11k1_origin*2,  color = 'k', label = 'Initial (isotropic)')
+ax.plot(Pope.k_long, Pope.E11k1*2, color = mycolors[0], label = 'RDT (c=0.25)')
 
 f_ori = 'E11_origin.txt'   # 对应 cal_origin_polar 输出
 f_rdt = 'E11k1_RDT.txt'      # 对应 cal_RDT_E11k1_polar 输出
 k_ori, E11_ori = np.loadtxt(f_ori, unpack=True)
 k_rdt, E11_rdt = np.loadtxt(f_rdt, unpack=True)
-ax.plot(k_ori, E11_ori, color = 'k', label = r'Initial (isotropic)')
-ax.plot(k_rdt, E11_rdt, color = mycolors[0], label = r'RDT ($c=0.25$)')
+ax.plot(k_ori, E11_ori, linestyle = '-.', color = 'k', label = 'Initial(fortran)')
+ax.plot(k_rdt, E11_rdt, linestyle = '-.', color = mycolors[0], label = 'RDT(fortran)')
 ax.xaxis.set_minor_locator(LogLocator(base=10.0, subs=None, numticks=10))
 ax.yaxis.set_minor_locator(LogLocator(base=10.0, subs=None, numticks=10))
+# x_ref = 2e2  # 参考点的 x 坐标
+# y_ref_m53 = 1e-2  # 参考点的 y 坐标
+# y_ref_m2 = 0.8e-2  # 参考点的 y 坐标
+# # 生成一系列 x 点用于画线（注意要在合适的范围内）
+# x_fit = np.logspace(np.log10(x_ref), np.log10(x_ref * 20), 100)
+
+# # 对应斜率线的 y 值
+# y_m53 = y_ref_m53 * (x_fit / x_ref) ** (-5/3)
+# y_m2  = y_ref_m2 * (x_fit / x_ref) ** (-2)
+
+# ax.plot(x_fit, y_m53, 'k--')
 
 ax = axess[0][1]
 ax.set_xscale('log')
-ax.set_xticks(xtricks)
+ax.set_xticks([1e1, 1e2, 1e3, 1e4, 1e5])
 ax.set_yscale('log')
 target = 5/3
-ax.set_ylabel(ylables[ax_id], fontsize=14)
+ax.plot(Pope.k_long, Pope.E11k1_origin*(Pope.k_long)**target,  color = 'k', label = 'Initial')
+ax.plot(Pope.k_long, Pope.E11k1*(Pope.k_long)**target, color = mycolors[0], label = 'RDT')
 ax.xaxis.set_minor_locator(LogLocator(base=10.0, subs=None, numticks=10))
 ax.yaxis.set_minor_locator(LogLocator(base=10.0, subs=None, numticks=10))
-ax.plot(k_ori, E11_ori*(k_ori)**target,  color = 'k', label = 'Initial (isotropic)')
-ax.plot(k_rdt, E11_rdt*(k_rdt)**target,  color = mycolors[0], label = r'RDT ($c=0.25$)')
+ax.plot(k_ori, E11_ori*(k_ori)**target, linestyle = '-.', color = 'k', label = 'Initial(fortran)')
+ax.plot(k_rdt, E11_rdt*(k_rdt)**target, linestyle = '-.', color = mycolors[0], label = 'RDT(fortran)')
 
 for fig_number in range(len(figs)):
     fig = figs[fig_number]
@@ -93,7 +106,7 @@ for fig_number in range(len(figs)):
             handles.append(line)
             labels.append(line.get_label())
     fig.subplots_adjust(top = 0.9, bottom = 0.22, left = 0.1, right=0.72)
-    fig.subplots_adjust(wspace=0.6)
+    fig.subplots_adjust(wspace=0.5)
     fig.legend(handles, labels, loc='center left', bbox_to_anchor=(0.73, 0.5), borderaxespad=0)
     # fig.tight_layout()
     fig.savefig(fig_path + '/' + figtitles[fig_number] + figformat, format=figformat[1:])

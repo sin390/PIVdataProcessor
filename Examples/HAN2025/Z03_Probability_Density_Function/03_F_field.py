@@ -78,7 +78,7 @@ for i in range(2):
             ax.set_ylabel(ax.get_ylabel(), labelpad=-4)
             ax.set_aspect('equal', adjustable='box')
 
-        central_x, central_y = pBase.CaseInfo.Central_Position_Flow
+        central_x, central_y = pBase.CaseInfo.Central_Position_Grid
         left,right = pBase.CaseInfo.Effective_Range[0]
         bottom,up = pBase.CaseInfo.Effective_Range[1]
 

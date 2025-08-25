@@ -22,13 +22,13 @@ class EnergySpectrum(pTS):
         if avg_ylines_for_x == None:
             self.X_avg_Yrange = self.CaseInfo.Uniform_Range[1]
         else:
-            self.X_avg_Yrange = (self.CaseInfo.Central_Position_Flow[1] - avg_ylines_for_x,
-                                 self.CaseInfo.Central_Position_Flow[1] + avg_ylines_for_x)
+            self.X_avg_Yrange = (self.CaseInfo.Central_Position_Grid[1] - avg_ylines_for_x,
+                                 self.CaseInfo.Central_Position_Grid[1] + avg_ylines_for_x)
         if avg_xlines_for_y == None:
             self.Y_avg_Xrange = self.CaseInfo.Uniform_Range[0]
         else:
-            self.Y_avg_Xrange = (self.CaseInfo.Central_Position_Flow[0] - avg_xlines_for_y,
-                                 self.CaseInfo.Central_Position_Flow[0] + avg_xlines_for_y)
+            self.Y_avg_Xrange = (self.CaseInfo.Central_Position_Grid[0] - avg_xlines_for_y,
+                                 self.CaseInfo.Central_Position_Grid[0] + avg_xlines_for_y)
         
         spec_length_xdir = (self.X_fft_range[1]-self.X_fft_range[0])//2 -1
         spec_length_ydir = (self.Y_fft_range[1]-self.Y_fft_range[0])//2 -1

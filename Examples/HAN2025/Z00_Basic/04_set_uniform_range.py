@@ -19,7 +19,7 @@ distances_y = []
 
 for case_id in range(len(cases1)):
     pBase.load_case(cases1[case_id])
-    center_index = pBase.CaseInfo.Central_Position_Flow
+    center_index = pBase.CaseInfo.Central_Position_Grid
     Xc = pBase.X[0][center_index[0],center_index[1]]
     Yc = pBase.X[1][center_index[0],center_index[1]]
     

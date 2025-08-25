@@ -48,7 +48,7 @@ yticks = [
     [-400,0,400],
     [0, 250,500,750,1000]
 ]
-figformat = '.eps'
+figformat = '.pdf'
 
 plotted_x_r = np.array([0, 30])
 plotted_y_r = np.array([0, 20])
@@ -76,7 +76,7 @@ for axes_number in range(len(axess)):
 for case_number in range(len(cases)):
     rs = RS(cases[case_number])
     rs.load()
-    central_x, central_y = pBase.CaseInfo.Central_Position_Flow
+    central_x, central_y = pBase.CaseInfo.Central_Position_Grid
     left,right = pBase.CaseInfo.Effective_Range[0]
     bottom,up = pBase.CaseInfo.Effective_Range[1]
     

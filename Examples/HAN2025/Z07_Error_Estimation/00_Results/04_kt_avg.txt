@@ -1,0 +1,13 @@
+
+Case: Case01
+Uncertainty of kt_avg : 21.8856
+Case: Case02
+Uncertainty of kt_avg : 27.3818
+Case: Case03
+Uncertainty of kt_avg : 31.5567
+Case: Case04
+Uncertainty of kt_avg : 52.0108
+Case: Case05
+Uncertainty of kt_avg : 45.3568
+Case: Case06
+Uncertainty of kt_avg : 61.5276

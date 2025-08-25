@@ -1,13 +1,19 @@
 
 Case: Case01
 Uncertainty of |S11|avg : 65.7743
+Uncertainty of S22avg : 35.8247
 Case: Case02
 Uncertainty of |S11|avg : 60.9870
+Uncertainty of S22avg : 44.9134
 Case: Case03
 Uncertainty of |S11|avg : 46.5526
+Uncertainty of S22avg : 31.4606
 Case: Case04
 Uncertainty of |S11|avg : 66.9244
+Uncertainty of S22avg : 42.5462
 Case: Case05
 Uncertainty of |S11|avg : 70.3061
+Uncertainty of S22avg : 46.4781
 Case: Case06
 Uncertainty of |S11|avg : 79.7902
+Uncertainty of S22avg : 45.8015

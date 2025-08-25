@@ -30,16 +30,16 @@ figsize_inch = (cm_to_inch(12), cm_to_inch(6))
 fig_number = 4
 figs, axess = generatefiglist(fig_number, 1, 1, figsize_inch)
 
-xlables = [r'$x-x_{c}$ (mm)', r'$x-x_{c}$ (mm)', r'$x-x_{c}$ (mm)', r'$x-x_{c}$ (mm)']
+xlables = [r'$x~(\mathrm{mm})$', r'$x~(\mathrm{mm})$', r'$x~(\mathrm{mm})$', r'$x~(\mathrm{mm})$']
 ylables = [r'$\mathrm{Skewness\ of}\ u_1$', 
            r'$\mathrm{Skewness\ of}\ u_2$', 
            r'$\mathrm{Flatness\ of}\ u_1$', 
            r'$\mathrm{Flatness\ of}\ u_2$']
 figtitles = ['S-u-x','S-v-x','F-u-x','F-v-x']
 xlims = [(-60,60),(-60,60),(-60,60),(-60,60)]
-ylims = [(-0.1,0.1),(-0.1,0.1),(1,5),(1,5)]
-yticks = [2,3,4]
-figformat = '.eps'
+ylims = [(-0.1,0.1),(-0.1,0.1),(0,6),(0,6)]
+yticks = [0,2,4,6]
+figformat = '.pdf'
 cases_title = ['Case 1', 'Case 2', 'Case 3', 'Case 4', 'Case 5', 'Case 6']
 
 for axes_number in range(len(figs)):
@@ -62,35 +62,36 @@ for case_number in range(len(cases)):
     S_v = nanmean_filter2d(sf.S_v,kernel_size=kernel_size)
     F_v = nanmean_filter2d(sf.F_v,kernel_size=kernel_size)
         
-    central_x, central_y = pBase.CaseInfo.Central_Position_Flow
+    central_x, central_y = pBase.CaseInfo.Central_Position_Grid
     left,right = pBase.CaseInfo.Effective_Range[0]
     bottom,up = pBase.CaseInfo.Effective_Range[1]
 
     'fig1'
-    plot_x = pBase.X[0][:, central_y] - pBase.X[0][central_x,0]
-    plot_y = S_u[:,central_y]
+    plot_x = pBase.X[0][left:right,central_y]
+    plot_y = S_u[left:right,central_y]
     axess[0][0].plot(plot_x, plot_y, linestyle = '-', color = mycolors[case_number], 
                         label = cases_title[case_number])
 
     'fig2'
-    plot_x = pBase.X[0][:, central_y] - pBase.X[0][central_x,0]
-    plot_y = S_v[:,central_y]
+    plot_x = pBase.X[0][left:right,central_y]
+    plot_y = S_v[left:right,central_y]
     axess[1][0].plot(plot_x, plot_y, linestyle = '-', color = mycolors[case_number], 
                         label = cases_title[case_number])
 
     'fig3'
-    plot_x = pBase.X[0][:, central_y] - pBase.X[0][central_x,0]
-    plot_y = F_u[:,central_y]
+    plot_x = pBase.X[0][left:right,central_y]
+    plot_y = F_u[left:right,central_y]
     axess[2][0].plot(plot_x, plot_y, linestyle = '-', color = mycolors[case_number], 
                         label = cases_title[case_number])
 
     
     'fig4'
-    plot_x = pBase.X[0][:, central_y] - pBase.X[0][central_x,0]
-    plot_y = F_v[:,central_y]
+    plot_x = pBase.X[0][left:right,central_y]
+    plot_y = F_v[left:right,central_y]
     axess[3][0].plot(plot_x, plot_y, linestyle = '-', color = mycolors[case_number], 
                         label = cases_title[case_number]) 
-
+axess[0][0].axhline(y=0, color= 'k', linestyle = '--',linewidth = 0.8)
+axess[1][0].axhline(y=0, color= 'k', linestyle = '--',linewidth = 0.8) 
 axess[2][0].axhline(y=3, color= 'k', linestyle = '--',linewidth = 0.8)
 axess[3][0].axhline(y=3, color= 'k', linestyle = '--',linewidth = 0.8)   
 

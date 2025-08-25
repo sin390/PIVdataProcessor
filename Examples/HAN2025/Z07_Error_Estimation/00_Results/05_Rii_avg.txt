@@ -1,0 +1,31 @@
+
+Case: Case01
+Uncertainty of R11 : 28.8912
+Uncertainty of R22 : 15.4006
+R11/R22 : 2.0005
+Uncertainty of R11/R22 : 0.2651
+Case: Case02
+Uncertainty of R11 : 32.2101
+Uncertainty of R22 : 17.1542
+R11/R22 : 2.2465
+Uncertainty of R11/R22 : 0.3300
+Case: Case03
+Uncertainty of R11 : 42.5062
+Uncertainty of R22 : 18.1284
+R11/R22 : 2.4971
+Uncertainty of R11/R22 : 0.4009
+Case: Case04
+Uncertainty of R11 : 78.1528
+Uncertainty of R22 : 29.9788
+R11/R22 : 2.4887
+Uncertainty of R11/R22 : 0.3390
+Case: Case05
+Uncertainty of R11 : 70.0781
+Uncertainty of R22 : 24.7195
+R11/R22 : 2.5729
+Uncertainty of R11/R22 : 0.3166
+Case: Case06
+Uncertainty of R11 : 96.7009
+Uncertainty of R22 : 29.1716
+R11/R22 : 2.7334
+Uncertainty of R11/R22 : 0.3909

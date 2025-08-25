@@ -11,7 +11,7 @@ from pivdataprocessor.L01_base import CaseInfoClass as CI
 import copy, shutil, os
 
 divide_number = 2
-sub_case_extension = [f'_sub{i}' for i in range(divide_number)]
+sub_case_extension = [f'_sub{i+1}' for i in range(divide_number)]
 
 def divide_case(case:str):
     pBase.load_case(case)
@@ -44,13 +44,13 @@ def divide_case(case:str):
 
 def delete_sub_case(case:str):
     for i in range(divide_number):
-        pBase.load_case(case + sub_case_extension[i])
-        root_path = pBase.get_paths()['CurrentCase']
+        pBase.load_case(case)
+        root_path = pBase.get_paths()['CurrentCase'] + sub_case_extension[i]
         pBase.rm_and_create_directory(root_path, ifcreate=False)
 
 
 cases = ['Case01','Case02','Case03','Case04','Case05','Case06']
-cases = ['Case01']
+cases = ['Mori465']
 for case in cases:
     delete_sub_case(case)
-    divide_case(case)
+    # divide_case(case)

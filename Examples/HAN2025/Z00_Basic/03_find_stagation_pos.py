@@ -52,7 +52,7 @@ for case in cases2:
     cutted_range = ((edge_cut,Nx-1-edge_cut),(edge_cut,Ny-1-edge_cut))
     pBase.CaseInfo.Effective_Range = cutted_range
     pBase.CaseInfo.Central_Position_Flow = (int(Nx/2),int(Ny/2))
-    pBase.CaseInfo.Central_Position_Grid = pBase.CaseInfo.Central_Position_Flow
+    pBase.CaseInfo.Central_Position_Flow = pBase.CaseInfo.Central_Position_Grid
     pBase.save_case()
 
 

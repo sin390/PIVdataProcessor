@@ -27,7 +27,7 @@ figsize_inch = (cm_to_inch(16), cm_to_inch(10))
 # -------------------------------------------------------------------------
 # endregion
 
-fig_number = 4
+fig_number = 3
 figs, axess = generatefiglist(fig_number, 2, 3, figsize_inch)
 
 cases_title = ['Case 1', 'Case 2', 'Case 3', 'Case 4', 'Case 5', 'Case 6']
@@ -44,11 +44,13 @@ levels = [[0.4*i-1 for i in range(6)],
           [0.4*i-1 for i in range(6)]]
 norms = [BoundaryNorm(levels[i], ncolors=plt.get_cmap('viridis').N, clip=True) for i in range(len(levels))]
 
-colorbarlabels = [r'$-S_{12}/S_{11}$', r'$-S_{21}/S_{11}$',r'$-S_{22}/S_{11}$',r'$-\frac{1}{2}(S_{21}-S_{12})/S_{11}$']
-figtitles = ['S12_S11','S21_S11', 'S22_S11','vor_S11']
-figformat = '.eps'
+colorbarlabels = [r'$-S_{12}/S_{11}$', r'$-S_{21}/S_{11}$',r'$-S_{22}/S_{11}$']
+figtitles = ['S12_S11','S21_S11', 'S22_S11']
+figformat = '.pdf'
 
 first_im = [None for _ in range(fig_number)]
+max_values = np.zeros(shape=(fig_number,6))
+min_values = np.zeros(shape=(fig_number,6))
 
 for i in range(2):
     for j in range(3):
@@ -74,73 +76,86 @@ for i in range(2):
         fs = FittedSlope(cases[case_number])
         fs.load_fitted()
 
-        central_x, central_y = pBase.CaseInfo.Central_Position_Flow
+        central_x, central_y = pBase.CaseInfo.Central_Position_Grid
         left,right = pBase.CaseInfo.Effective_Range[0]
         bottom,up = pBase.CaseInfo.Effective_Range[1]
 
         
 
         'fig1'
-        ax = axess[0][case_number]
+        fig_id = 0
+        ax = axess[fig_id][case_number]
         X = pBase.X[0][left:right,bottom:up].T
         Y = pBase.X[1][left:right,bottom:up].T
+        mask = (X > xlims[fig_id][0]) & (X < xlims[fig_id][1]) & (Y > ylims[fig_id][0]) & (Y < ylims[fig_id][1])
         N_S12 = fs.fit_avg_dUdX[0][1][left:right,bottom:up]/(-fs.fit_avg_dUdX[0][0][left:right,bottom:up])
         N_S12 = N_S12.T
 
-        c = ax.imshow(N_S12, extent=[X.min(), X.max(), Y.min(), Y.max()], 
-                                           cmap='viridis', origin='lower', interpolation='None', norm = norms[0])
+
+        max_values[fig_id,case_number] = np.nanmax(N_S12[mask])
+        min_values[fig_id,case_number] = np.nanmin(N_S12[mask])
+
+        vmin, vmax = -1.2,1.2
+        c = ax.imshow(N_S12, extent=[X.min(), X.max(), Y.min(), Y.max()],
+                    cmap='viridis', origin='lower', interpolation='None',
+                    vmin=vmin, vmax=vmax)
+        contours = ax.contour(X, Y, N_S12, levels=[-0.3,-0.1,0.1,0.3], colors='black', linestyles = '-', linewidths=0.5)
         if case_number == 0:
-            first_im[0] = c         
-        ax.plot(pBase.X[0][central_x,central_y], pBase.X[1][central_x,central_y],  marker='+', color='red', markersize=6)
+            first_im[fig_id] = c         
+
 
         'fig2'
-        ax = axess[1][case_number]
+        fig_id = 1
+        ax = axess[fig_id][case_number]
         X = pBase.X[0][left:right,bottom:up].T
         Y = pBase.X[1][left:right,bottom:up].T
         N_S21 = fs.fit_avg_dUdX[1][0][left:right,bottom:up]/(-fs.fit_avg_dUdX[0][0][left:right,bottom:up])
         N_S21 = N_S21.T
+        max_values[fig_id,case_number] = np.nanmax(N_S21[mask])
+        min_values[fig_id,case_number] = np.nanmin(N_S21[mask])
 
-        c = ax.imshow(N_S21, extent=[X.min(), X.max(), Y.min(), Y.max()], 
-                                           cmap='viridis', origin='lower', interpolation='None', norm = norms[1])
+        vmin, vmax = -1.2,1.2
+        c = ax.imshow(N_S21, extent=[X.min(), X.max(), Y.min(), Y.max()],
+                    cmap='viridis', origin='lower', interpolation='None',
+                    vmin=vmin, vmax=vmax)
+        contours = ax.contour(X, Y, N_S21, levels=[-0.3,-0.1,0.1,0.3], colors='black', linestyles = '-', linewidths=0.5)
         if case_number == 0:
-            first_im[1] = c         
-        ax.plot(pBase.X[0][central_x,central_y], pBase.X[1][central_x,central_y],  marker='+', color='red', markersize=6)
+            first_im[fig_id] = c         
+
         
         'fig3'
-        ax = axess[2][case_number]
+        fig_id = 2
+        ax = axess[fig_id][case_number]
         X = pBase.X[0][left:right,bottom:up].T
         Y = pBase.X[1][left:right,bottom:up].T
         N_S22 = fs.fit_avg_dUdX[1][1][left:right,bottom:up]/(-fs.fit_avg_dUdX[0][0][left:right,bottom:up])
         N_S22 = N_S22.T
-
-        c = ax.imshow(N_S22, extent=[X.min(), X.max(), Y.min(), Y.max()], 
-                                           cmap='viridis', origin='lower', interpolation='None', norm = norms[2])
+        max_values[fig_id,case_number] = np.nanmax(N_S22[mask])
+        min_values[fig_id,case_number] = np.nanmin(N_S22[mask])
+        vmin, vmax = 0,1.1
+        c = ax.imshow(N_S22, extent=[X.min(), X.max(), Y.min(), Y.max()],
+                    cmap='viridis', origin='lower', interpolation='None',
+                    vmin=vmin, vmax=vmax)
+        contours = ax.contour(X, Y, N_S22, levels=[0.4,0.6], colors='black', linestyles = '-', linewidths=0.5)
         if case_number == 0:
-            first_im[2] = c         
-        ax.plot(pBase.X[0][central_x,central_y], pBase.X[1][central_x,central_y],  marker='+', color='red', markersize=6)
+            first_im[fig_id] = c         
+   
+   
 
-        'fig4'
-        ax = axess[3][case_number]
-        X = pBase.X[0][left:right,bottom:up].T
-        Y = pBase.X[1][left:right,bottom:up].T
-        N_S12 = fs.fit_avg_dUdX[0][1][left:right,bottom:up]/(-fs.fit_avg_dUdX[0][0][left:right,bottom:up])
-        N_S21 = fs.fit_avg_dUdX[1][0][left:right,bottom:up]/(-fs.fit_avg_dUdX[0][0][left:right,bottom:up])
-        N_vor = (N_S21-N_S12)/2
-        N_vor = N_vor.T
-
-        c = ax.imshow(N_vor, extent=[X.min(), X.max(), Y.min(), Y.max()], 
-                                           cmap='viridis', origin='lower', interpolation='None', norm = norms[3])
-        if case_number == 0:
-            first_im[3] = c         
-        ax.plot(pBase.X[0][central_x,central_y], pBase.X[1][central_x,central_y],  marker='+', color='red', markersize=6)       
-
-
+colorbarticks = [
+    [-1,-0.5,0,0.5,1],
+    [-1,-0.5,0,0.5,1],
+    [0, 0.2,0.4,0.6,0.8,1.0]
+]
 
 for fig_id in range(fig_number):
+    print(f'fig_id={fig_id}')
+    print(np.nanmax(min_values[fig_id]))
+    print(np.nanmax(max_values[fig_id]))    
     cbar_ax = figs[fig_id].add_axes([0.25, 0.13, 0.5, 0.03])
     colorbar = figs[fig_id].colorbar(first_im[fig_id], cax=cbar_ax, orientation='horizontal', label=colorbarlabels[fig_id])
     colorbar.ax.minorticks_off()
-    # colorbar.ax.set_xticks(colorbarticks)
+    colorbar.ax.set_xticks(colorbarticks[fig_id])
     fig = figs[fig_id]
  
     label_index = ['a','b','c','d','e','f']

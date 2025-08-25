@@ -10,7 +10,7 @@ from numpy.polynomial.polynomial import polyvander2d, polyval2d
 from numpy.linalg import lstsq
 from pivdataprocessor.L01_base import PIVDataProcessorBase as pBase
 from pivdataprocessor.L02_extension_tmpl import PIVDataProcessorExtensionTemplate as pTS
-from pivdataprocessor.A01_toolbox import least_squared_fitting
+
 
 class FittedSlope(pTS):
     
@@ -59,14 +59,16 @@ class FittedSlope(pTS):
 
 if __name__ == "__main__":
     cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
-    cases = [case + '_sub2' for case in cases]
+    # cases = [case + '_sub2' for case in cases]
     for case_id in range(len(cases)):
         fitted_cases = FittedSlope(cases[case_id])
         fitted_cases.calculate(order=3)
-        xc,yc = pBase.CaseInfo.Central_Position_Flow
+        xc,yc = pBase.CaseInfo.Central_Position_Grid
         fitted_cases.report(f'Case : {cases[case_id]}')
         fitted_cases.report(f'S11@xc,yc : {fitted_cases.fit_avg_dUdX[0][0][xc,yc]*1000} (s^-1)')
         left,right = pBase.CaseInfo.Effective_Range[0]
         bottom, up = pBase.CaseInfo.Effective_Range[1]
         fitted_cases.report(f'S11_max : {np.nanmin(fitted_cases.fit_avg_dUdX[0][0][left:right,bottom:up])*1000} (s^-1)')
         fitted_cases.report(f'S11_avg : {np.nanmean(fitted_cases.fit_avg_dUdX[0][0][left:right,bottom:up])*1000} (s^-1)')
+        fitted_cases.report(f'S22_max : {np.nanmax(fitted_cases.fit_avg_dUdX[1][1][left:right,bottom:up])*1000} (s^-1)')
+        fitted_cases.report(f'S22_avg : {np.nanmean(fitted_cases.fit_avg_dUdX[1][1][left:right,bottom:up])*1000} (s^-1)')

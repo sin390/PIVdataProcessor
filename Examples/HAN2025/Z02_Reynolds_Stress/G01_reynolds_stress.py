@@ -61,12 +61,14 @@ class ReynoldsStress(pTS):
         self.__save()
 
     def __scalars(self):
-        self.report(f'Avg_uu = {np.nanmean(self.uu)}')
-        self.report(f'Avg_vv = {np.nanmean(self.vv)}')
-        self.report(f'Avg_uv = {np.nanmean(self.uv)}')
-        self.report(f'Avg_k2 = {np.nanmean(self.k2)}')
-        self.report(f'Avg_xi = {np.nanmean(self.invariant_xi)}')
-        self.report(f'Avg_xi = {np.nanmean(self.invariant_eta)}')
+        left,right = pBase.CaseInfo.Effective_Range[0]
+        bottom, up = pBase.CaseInfo.Effective_Range[1]    
+        self.report(f'Avg_uu = {np.nanmean(self.uu[left:right,bottom:up])}')
+        self.report(f'Avg_vv = {np.nanmean(self.vv[left:right,bottom:up])}')
+        self.report(f'Avg_uv = {np.nanmean(self.uv[left:right,bottom:up])}')
+        self.report(f'Avg_k2 = {np.nanmean(self.k2[left:right,bottom:up])}')
+        self.report(f'Avg_xi = {np.nanmean(self.invariant_xi[left:right,bottom:up])}')
+        self.report(f'Avg_eta = {np.nanmean(self.invariant_eta[left:right,bottom:up])}')
 
     def __save(self):
         self.save_nparray_to_bin(self.uu, self.result_path+'/uu.bin')
@@ -88,6 +90,7 @@ class ReynoldsStress(pTS):
 
 if __name__ == "__main__":
     cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
+    cases = ['Mori465']
     cases = [case + '_sub2' for case in cases]
     for case_id in range(len(cases)):
         RS = ReynoldsStress(cases[case_id])

@@ -39,5 +39,5 @@ def clean_dirs(target_cases, ifBin, ifProcessed_data, ifPlots):
         pBase.rm_and_create_directory(path, ifcreate=False)
 
 if __name__ == "__main__":
-    target_cases = []  # empty means all
-    clean_dirs(target_cases, ifBin = True, ifProcessed_data = False, ifPlots = False)
+    target_cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06','Mori465']  # empty means all
+    clean_dirs(target_cases, ifBin = True, ifProcessed_data = True, ifPlots = True)

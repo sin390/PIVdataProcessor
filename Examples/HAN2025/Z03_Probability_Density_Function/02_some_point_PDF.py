@@ -36,7 +36,7 @@ ylables = [r'PDF', r'PDF']
 figtitles = ['PDF-u','PDF-v']
 xlims = [(-5,5),(-5,5)]
 ylims = [(0,0.5),(0,0.5)]
-figformat = '.eps'
+figformat = '.pdf'
 
 for axes_number in range(len(axess)):
     for i in range(3):
@@ -55,12 +55,12 @@ for case_number in range(len(cases)):
     pBase.load_case(cases[case_number])
     Nx, Ny = pBase.CaseInfo.Nx, pBase.CaseInfo.Ny
 
-    central_x, central_y = pBase.CaseInfo.Central_Position_Flow
+    central_x, central_y = pBase.CaseInfo.Central_Position_Grid
     left,right = pBase.CaseInfo.Effective_Range[0]
     bottom,up = pBase.CaseInfo.Effective_Range[1]
 
-    plotted_x = np.array([0, 15, 30]) + pBase.X[0][central_x,central_y]
-    plotted_y = np.array([0, 0, 0 ]) + pBase.X[1][central_x,central_y]
+    plotted_x = np.array([0, 15, 30])
+    plotted_y = np.array([0, 0, 0 ])
     plotted_x, plotted_y = pBase.pos_mm_to_index_list(plotted_x,plotted_y)
 
     PDF_u = [PD() for _ in range(len(plotted_x))]

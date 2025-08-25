@@ -73,7 +73,7 @@ for i in range(3):
             axconfig.apply()
 
         
-        central_x, central_y = pBase.CaseInfo.Central_Position_Flow
+        central_x, central_y = pBase.CaseInfo.Central_Position_Grid
         left,right = pBase.CaseInfo.Effective_Range[0]
         bottom,up = pBase.CaseInfo.Effective_Range[1]
 

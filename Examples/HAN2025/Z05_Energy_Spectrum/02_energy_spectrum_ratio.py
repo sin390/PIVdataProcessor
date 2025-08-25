@@ -16,7 +16,7 @@ from G01_energy_spectrum import EnergySpectrum as ES
 
 from pivdataprocessor.A02_pltcfg import quickset, getplotpath, myaxconfig, mycolors, generatefiglist
 
-cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06', 'Mori465']
+cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
 mycolors[6] = 'k'
 # -------------------------------------------------------------------------
 # region
@@ -31,12 +31,12 @@ figsize_inch = (cm_to_inch(12), cm_to_inch(7))
 fig_number = 1
 figs, axess = generatefiglist(fig_number, 1, 1, figsize_inch)
 
-xlables = [r'$k$ (m$^{-1}$)']
-ylables = [r'$E_{11}(k_x)/E_{22}(k_y)$']
+xlables = [r'$k~\mathrm{(m^{-1})}$']
+ylables = [r'$E_{u}(k_x)/E_{v}(k_y)$']
 figtitles = ['E11_E22']
 xlims = [(0.8e2,1e4)]
 ylims = [(0.5,2)]
-figformat = '.eps'
+figformat = '.pdf'
 case_titles = ['Case 1', 'Case 2', 'Case 3', 'Case 4', 'Case 5', 'Case 6', 'Mori et al.']
 for fig_id in range(fig_number):
     ax = axess[fig_id][0]
@@ -69,6 +69,14 @@ for case_number in range(len(cases)):
     stat = 0
     ax.plot(k[stat:], E11_uni[stat:]/E22_uni[stat:] ,linestyle = '-', color = mycolors[case_number], label = case_titles[case_number])
     ax.axhline(1, linestyle = '-.', linewidth = 0.8, color = 'k')
+
+f_EuEv = 'EuEv_Ratio_x605mm.txt'
+k, EuEv = np.loadtxt(f_EuEv, unpack=True,skiprows=1)
+
+fig_id = 0
+ax = axess[fig_id][0]
+ax.plot(k, EuEv, color = 'k', label = r'Mori et al.')
+
 
 for fig_number in range(len(figs)):
     fig = figs[fig_number]

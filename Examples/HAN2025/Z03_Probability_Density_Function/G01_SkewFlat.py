@@ -54,6 +54,7 @@ class SkewFlat(pTS):
 
 if __name__ == "__main__":
     cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
+    cases = [case + '_sub1' for case in cases]    
     for case_id in range(len(cases)):
         target_cases = SkewFlat(cases[case_id])
         target_cases.calculate()

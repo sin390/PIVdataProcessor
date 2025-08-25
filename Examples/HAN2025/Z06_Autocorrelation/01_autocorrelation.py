@@ -34,7 +34,7 @@ ylables = [r'$f_i(r)$']
 figtitles = ['autocorrelation']
 xlims = [(0,100)]
 ylims = [(-0.2,1)]
-figformat = '.eps'
+figformat = '.pdf'
 case_titles = ['Case 1', 'Case 2', 'Case 3', 'Case 4', 'Case 5', 'Case 6']
 
 for i in range(3):
@@ -64,9 +64,7 @@ for i in range(3):
         axess[fig_id][case_number].plot(ac.r_ydir,ac.autocorr_ydir[1],  linestyle = '-', color = mycolors[1],
                                 label = r'$f_2(r)$')
         axess[fig_id][case_number].plot(ac.fitting_part[3],ac.fitting_part[2], linewidth=0.8, linestyle = '-.', color = mycolors[1])
-        ref_ac = AC('Mori465')
-        ref_ac.load()
-        axess[fig_id][case_number].plot(ref_ac.r_xdir,ref_ac.autocorr_xdir[0], linewidth=0.8, linestyle = '-', color = 'k')
+
 
 for fig_id in range(len(figs)):
     fig = figs[fig_id]

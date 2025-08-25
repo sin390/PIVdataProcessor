@@ -9,13 +9,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-
 from pivdataprocessor.L01_base import PIVDataProcessorBase as pBase
 from G01_reynolds_stress import ReynoldsStress as RS
-
-from Z01_VelocityDistribution.G01_fitted_slope import FittedSlope as FS
-from pivdataprocessor.A02_pltcfg import quickset, getplotpath, myaxconfig, mycolors, generatefiglist
 from pivdataprocessor.A01_toolbox import nanmean_filter2d
+from pivdataprocessor.A02_pltcfg import quickset, getplotpath, myaxconfig, mycolors, generatefiglist
 
 cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
 
@@ -30,61 +27,55 @@ figsize_inch = (cm_to_inch(12), cm_to_inch(6))
 # endregion
 
 
-fig_number = 2
+fig_number = 1
 figs, axess = generatefiglist(fig_number, 1, 1, figsize_inch)
 
-xlables = [r'$-\frac{\partial \overline{U}_1}{\partial x_1} \, (\mathrm{s}^{-1})$',
-           r'$-\frac{\partial \overline{U}_1}{\partial x_1} \, (\mathrm{s}^{-1})$']
-ylables = [r'$\xi$',r'$\eta/k_t$']
+xlables = [r'$x~(\mathrm{mm})$']
+ylables = [r'$k_t~(\mathrm{m}^{2}/\mathrm{s}^{2})$']
+figtitles = ['kt_central_line']
+xlims = [(-60,60)]
+xticks = [[-50,0,50]]
+ylims = [(0,1000)]
+yticks = [
+    [0, 200,400,600,800]
+]
+figformat = '.pdf'
+filter_size = 8
 
-figtitles = ['xi-S11','eta-S11']
-ylims = [(0,0.2),(0,0.2)]
-xlims = [(0,1100),(0,1100)]
-figformat = '.jpg'
+case_titles = ['Case 1', 'Case 2', 'Case 3', 'Case 4', 'Case 5', 'Case 6']
 
-lines = ['-','-','-','-.','-.','-.']
+for axes_number in range(len(axess)):
+    ax_num = 0
+    ax = axess[axes_number][ax_num]
+    axconfig = myaxconfig(ax = ax)
+    axconfig.xlable = xlables[ax_num]
+    axconfig.ylable = ylables[ax_num]
+    axconfig.xlim = xlims[ax_num]
+    axconfig.xticks = xticks[ax_num]
+    axconfig.ylim = ylims[ax_num]
+    axconfig.yticks = yticks[ax_num]
+    axconfig.apply()
 
 
 for case_number in range(len(cases)):
     rs = RS(cases[case_number])
     rs.load()
-    fs = FS(cases[case_number])
-    fs.load_fitted()
-    invariant_xi = rs.invariant_xi
-    invariant_eta = rs.invariant_eta / rs.k2
-    invariant_xi = nanmean_filter2d(rs.invariant_xi,kernel_size=8)
-    invariant_eta = nanmean_filter2d(invariant_eta,kernel_size=8)
-    for axes_number in range(len(axess)):
-        ax = axess[axes_number][0]
-        axconfig = myaxconfig(ax = ax)
-        # axconfig.title = cases[case_number]
-        axconfig.xlable = xlables[axes_number]
-        axconfig.ylable = ylables[axes_number]
-        # axconfig.ylim = ylims[axes_number]
-        axconfig.xlim = xlims[axes_number]
-        axconfig.apply()
-    
     central_x, central_y = pBase.CaseInfo.Central_Position_Grid
     left,right = pBase.CaseInfo.Effective_Range[0]
     bottom,up = pBase.CaseInfo.Effective_Range[1]
-
-
-    'fig1'
-    plot_x = fs.fit_avg_dUdX[0][0][left:right,central_y]*(-1000)
-    plot_y = invariant_xi[left:right,central_y]
-    axess[0][0].plot(plot_x, plot_y, color = mycolors[case_number], label = f'{cases[case_number]}')
-
-
-    'fig2'
-    plot_x = fs.fit_avg_dUdX[0][0][left:right,central_y]*(-1000)
-    plot_y = invariant_eta[left:right,central_y]
-    axess[1][0].plot(plot_x, plot_y, color = mycolors[case_number], label = f'{cases[case_number]}')
-
-
+    
+    fig_id = 0
+    
+    ax = axess[fig_id][0]
+    plot_x = pBase.X[0][left:right,central_y]
+    kt = rs.k2
+    kt = nanmean_filter2d(kt,filter_size)
+    plot_y = kt[left:right,central_y]
+    ax.plot(plot_x,plot_y,linestyle = '-', color = mycolors[case_number], label = case_titles[case_number])
     
 
-
-for fig_id in range(len(figs)):
+        
+for fig_id in range(fig_number):
     fig = figs[fig_id]
     handles, labels = [], []
     for line in axess[fig_id][0].get_lines():
@@ -96,4 +87,4 @@ for fig_id in range(len(figs)):
     fig.legend(handles, labels, loc='center left', bbox_to_anchor=(0.67, 0.5), borderaxespad=0)
     fig = figs[fig_id]
     fig.savefig(fig_path + '/' + figtitles[fig_id] + figformat, format=figformat[1:])
-plt.clf()       
+plt.clf()      

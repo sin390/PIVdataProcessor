@@ -1,0 +1,19 @@
+
+Case: Case01
+Uncertainty of L1 : 0.1149
+Uncertainty of L2 : 1.2012
+Case: Case02
+Uncertainty of L1 : 0.5474
+Uncertainty of L2 : 2.1426
+Case: Case03
+Uncertainty of L1 : 0.2422
+Uncertainty of L2 : 2.3264
+Case: Case04
+Uncertainty of L1 : 1.3263
+Uncertainty of L2 : 2.0272
+Case: Case05
+Uncertainty of L1 : 3.7880
+Uncertainty of L2 : 0.5410
+Case: Case06
+Uncertainty of L1 : 0.1573
+Uncertainty of L2 : 1.6314

@@ -50,7 +50,7 @@ norms = [BoundaryNorm(levels[i], ncolors=plt.get_cmap('viridis').N, clip=True) f
 
 colorbarlabels = [r'$\eta$']
 figtitles = ['eta_Contour']
-figformat = '.eps'
+figformat = '.pdf'
 
 cases_title = ['Case 1', 'Case 2', 'Case 3', 'Case 4', 'Case 5', 'Case 6']
 
@@ -76,6 +76,8 @@ for i in range(2):
 
 first_im = [None for _ in range(fig_number)]
 filter_size = 8
+max_values = np.zeros(shape=(fig_number,6))
+min_values = np.zeros(shape=(fig_number,6))
 
 for case_number in range(len(cases)):
     rs = RS(cases[case_number])
@@ -84,36 +86,47 @@ for case_number in range(len(cases)):
     invariant_xi = nanmean_filter2d(rs.invariant_xi,kernel_size=filter_size)
     invariant_eta = nanmean_filter2d(rs.invariant_eta,kernel_size=filter_size)
     
-    central_x, central_y = pBase.CaseInfo.Central_Position_Flow
+    central_x, central_y = pBase.CaseInfo.Central_Position_Grid
     left,right = pBase.CaseInfo.Effective_Range[0]
     bottom,up = pBase.CaseInfo.Effective_Range[1]
 
 
     'fig1'
-    ax = axess[0][case_number]
+    fig_id = 0
+    ax = axess[fig_id][case_number]
     X = pBase.X[0][left:right,bottom:up].T
     Y = pBase.X[1][left:right,bottom:up].T
     eta = invariant_eta[left:right,bottom:up]
     eta = eta.T
-
     c = ax.imshow(eta, extent=[X.min(), X.max(), Y.min(), Y.max()], 
                                         cmap='viridis', origin='lower', interpolation='None', norm = norms[0])
+ 
+    max_values[fig_id,case_number] = np.nanmax(eta)
+    min_values[fig_id,case_number] = np.nanmin(eta) 
+
+    vmin, vmax = 0,0.18
+    c = ax.imshow(eta, extent=[X.min(), X.max(), Y.min(), Y.max()],
+                cmap='viridis', origin='lower', interpolation='None',
+                vmin=vmin, vmax=vmax)
+
+    contours = ax.contour(X, Y, eta, levels=[0.06,0.09,0.12,0.15], colors='black', linestyles = '-', linewidths=0.5)
+
     if case_number == 0:
         first_im[0] = c         
-    ax.plot(pBase.X[0][central_x,central_y], pBase.X[1][central_x,central_y],  marker='+', color='red', markersize=6)
 
-    U = pBase.avg_U[0][left:right,bottom:up].T
-    V = pBase.avg_U[1][left:right,bottom:up].T    
-    density = [(0.5, 0.4),(0.6, 0.5),(0.6, 0.5),
-                (0.5, 0.4),(0.6, 0.5),(0.6, 0.5)]
-    strm = ax.streamplot(X, Y, U, V, color='k', linewidth=0.5, arrowsize=0.5, density=density[case_number],integration_direction='both')
+colorbarticks = [
+    [0,0.03,0.06,0.09,0.12,0.15,0.18]
+]
 
 for fig_id in range(fig_number):
+    print(f'fig_id={fig_id}')
+    print(np.nanmin(min_values[fig_id]))
+    print(np.nanmax(max_values[fig_id]))    
     cbar_ax = figs[fig_id].add_axes([0.25, 0.13, 0.5, 0.03])
     colorbar = figs[fig_id].colorbar(first_im[fig_id], cax=cbar_ax, orientation='horizontal', label=colorbarlabels[fig_id])
     colorbar.set_label(colorbarlabels[fig_id], fontsize=12)
     colorbar.ax.minorticks_off()
-    # colorbar.ax.set_xticks(colorbarticks)
+    colorbar.ax.set_xticks(colorbarticks[fig_id])
     fig = figs[fig_id]
  
     label_index = ['a','b','c','d','e','f']

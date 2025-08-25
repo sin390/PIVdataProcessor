@@ -67,7 +67,7 @@ for i in range(2):
             axconfig.ylim = ylims[axes_number]
             axconfig.apply()
 
-        central_x, central_y = pBase.CaseInfo.Central_Position_Flow
+        central_x, central_y = pBase.CaseInfo.Central_Position_Grid
         left,right = pBase.CaseInfo.Effective_Range[0]
         bottom,up = pBase.CaseInfo.Effective_Range[1]
 

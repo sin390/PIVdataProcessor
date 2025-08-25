@@ -81,7 +81,8 @@ for i in range(2):
         quiv = ax.quiver(X[::step, ::step], Y[::step, ::step],
                          U[::step, ::step], V[::step, ::step],
                          magnitude[::step, ::step],
-                         cmap='viridis', clim=(global_min, global_max), scale=1000)
+                         cmap='viridis', clim=(global_min, global_max), 
+                         scale=1000)
 
         if case_number == 0:
             first_quiv = quiv

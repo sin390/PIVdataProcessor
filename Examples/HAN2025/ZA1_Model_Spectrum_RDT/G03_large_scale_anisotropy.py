@@ -8,7 +8,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from L01_modelspectrumRDT import Pope_AX, Pao_AX, k_range
+from ZA1_Model_Spectrum_RDT.G01_modelspectrumRDT import Pope_AX, Pao_AX, k_range
 from pivdataprocessor.A01_toolbox import float_precsion
 from pivdataprocessor.A02_pltcfg import getplotpath
 from pivdataprocessor.L02_extension_tmpl import GeneralTemplate as GT
