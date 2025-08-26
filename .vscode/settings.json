@@ -3,5 +3,8 @@
     "**/Examples",
     "**/S01_Cases",
     "**/S02_Plots",
-  ]
+  ],
+  "terminal.integrated.env.windows": {
+    "PYTHONPATH": "."
+  }  
 }
