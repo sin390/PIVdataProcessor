@@ -70,7 +70,7 @@ for case_number in range(len(cases)):
     ax.plot(k[stat:], E11_uni[stat:]/E22_uni[stat:] ,linestyle = '-', color = mycolors[case_number], label = case_titles[case_number])
     ax.axhline(1, linestyle = '-.', linewidth = 0.8, color = 'k')
 
-f_EuEv = 'EuEv_Ratio_x605mm.txt'
+f_EuEv = './Z05_Energy_Spectrum/Mori605/EuEv_Ratio_x605mm.txt'
 k, EuEv = np.loadtxt(f_EuEv, unpack=True,skiprows=1)
 
 fig_id = 0

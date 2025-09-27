@@ -85,8 +85,8 @@ for case_number in range(len(cases)):
     ax.set_yscale('log') 
     ax.plot(es.wavenumber_ydir, es.spec_ydir[1]*(es.wavenumber_ydir**target), color = mycolors[case_number])
 
-f_Eu = 'Eu_kx_x605mm.txt'
-f_Ev = 'Ev_ky_x605mm.txt' 
+f_Eu = './Z05_Energy_Spectrum/Mori605/Eu_kx_x605mm.txt'
+f_Ev = './Z05_Energy_Spectrum/Mori605/Ev_ky_x605mm.txt' 
 k_x, Eu = np.loadtxt(f_Eu, unpack=True,skiprows=1)
 k_y, Ev = np.loadtxt(f_Ev, unpack=True,skiprows=1)
 fig_id = 0
