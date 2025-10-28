@@ -54,7 +54,6 @@ from typing import TYPE_CHECKING, cast, overload
 
 from cycler import cycler  # noqa: F401
 import matplotlib
-import matplotlib.colorbar
 import matplotlib.image
 from matplotlib import _api
 # Re-exported (import x as x) for typing.
@@ -873,7 +872,7 @@ def figure(
     # autoincrement if None, else integer from 1-N
     num: int | str | Figure | SubFigure | None = None,
     # defaults to rc figure.figsize
-    figsize: tuple[float, float] | None = None,
+    figsize: ArrayLike | None = None,
     # defaults to rc figure.dpi
     dpi: float | None = None,
     *,
@@ -1170,7 +1169,7 @@ def disconnect(cid: int) -> None:
 
 def close(fig: None | int | str | Figure | Literal["all"] = None) -> None:
     """
-    Close a figure window.
+    Close a figure window, and unregister it from pyplot.
 
     Parameters
     ----------
@@ -1183,6 +1182,14 @@ def close(fig: None | int | str | Figure | Literal["all"] = None) -> None:
         - ``str``: a figure name
         - 'all': all figures
 
+    Notes
+    -----
+    pyplot maintains a reference to figures created with `figure()`. When
+    work on the figure is completed, it should be closed, i.e. deregistered
+    from pyplot, to free its memory (see also :rc:figure.max_open_warning).
+    Closing a figure window created by `show()` automatically deregisters the
+    figure. For all other use cases, most prominently `savefig()` without
+    `show()`, the figure must be deregistered explicitly using `close()`.
     """
     if fig is None:
         manager = _pylab_helpers.Gcf.get_active()
@@ -2715,12 +2722,15 @@ def polar(*args, **kwargs) -> list[Line2D]:
 # If rcParams['backend_fallback'] is true, and an interactive backend is
 # requested, ignore rcParams['backend'] and force selection of a backend that
 # is compatible with the current running interactive framework.
-if (rcParams["backend_fallback"]
-        and rcParams._get_backend_or_none() in (  # type: ignore[attr-defined]
-            set(backend_registry.list_builtin(BackendFilter.INTERACTIVE)) -
-            {'webagg', 'nbagg'})
-        and cbook._get_running_interactive_framework()):
-    rcParams._set("backend", rcsetup._auto_backend_sentinel)
+if rcParams["backend_fallback"]:
+    requested_backend = rcParams._get_backend_or_none()  # type: ignore[attr-defined]
+    requested_backend = None if requested_backend is None else requested_backend.lower()
+    available_backends = backend_registry.list_builtin(BackendFilter.INTERACTIVE)
+    if (
+        requested_backend in (set(available_backends) - {'webagg', 'nbagg'})
+        and cbook._get_running_interactive_framework()
+    ):
+        rcParams._set("backend", rcsetup._auto_backend_sentinel)
 
 # fmt: on
 
@@ -3134,8 +3144,9 @@ def cohere(
     NFFT: int = 256,
     Fs: float = 2,
     Fc: int = 0,
-    detrend: Literal["none", "mean", "linear"]
-    | Callable[[ArrayLike], ArrayLike] = mlab.detrend_none,
+    detrend: (
+        Literal["none", "mean", "linear"] | Callable[[ArrayLike], ArrayLike]
+    ) = mlab.detrend_none,
     window: Callable[[ArrayLike], ArrayLike] | ArrayLike = mlab.window_hanning,
     noverlap: int = 0,
     pad_to: int | None = None,
@@ -3192,9 +3203,9 @@ def csd(
     NFFT: int | None = None,
     Fs: float | None = None,
     Fc: int | None = None,
-    detrend: Literal["none", "mean", "linear"]
-    | Callable[[ArrayLike], ArrayLike]
-    | None = None,
+    detrend: (
+        Literal["none", "mean", "linear"] | Callable[[ArrayLike], ArrayLike] | None
+    ) = None,
     window: Callable[[ArrayLike], ArrayLike] | ArrayLike | None = None,
     noverlap: int | None = None,
     pad_to: int | None = None,
@@ -3230,7 +3241,7 @@ def ecdf(
     weights: ArrayLike | None = None,
     *,
     complementary: bool = False,
-    orientation: Literal["vertical", "horizonatal"] = "vertical",
+    orientation: Literal["vertical", "horizontal"] = "vertical",
     compress: bool = False,
     data=None,
     **kwargs,
@@ -3865,9 +3876,9 @@ def psd(
     NFFT: int | None = None,
     Fs: float | None = None,
     Fc: int | None = None,
-    detrend: Literal["none", "mean", "linear"]
-    | Callable[[ArrayLike], ArrayLike]
-    | None = None,
+    detrend: (
+        Literal["none", "mean", "linear"] | Callable[[ArrayLike], ArrayLike] | None
+    ) = None,
     window: Callable[[ArrayLike], ArrayLike] | ArrayLike | None = None,
     noverlap: int | None = None,
     pad_to: int | None = None,
@@ -3975,9 +3986,9 @@ def specgram(
     NFFT: int | None = None,
     Fs: float | None = None,
     Fc: int | None = None,
-    detrend: Literal["none", "mean", "linear"]
-    | Callable[[ArrayLike], ArrayLike]
-    | None = None,
+    detrend: (
+        Literal["none", "mean", "linear"] | Callable[[ArrayLike], ArrayLike] | None
+    ) = None,
     window: Callable[[ArrayLike], ArrayLike] | ArrayLike | None = None,
     noverlap: int | None = None,
     cmap: str | Colormap | None = None,
@@ -4288,10 +4299,9 @@ def violinplot(
     showmedians: bool = False,
     quantiles: Sequence[float | Sequence[float]] | None = None,
     points: int = 100,
-    bw_method: Literal["scott", "silverman"]
-    | float
-    | Callable[[GaussianKDE], float]
-    | None = None,
+    bw_method: (
+        Literal["scott", "silverman"] | float | Callable[[GaussianKDE], float] | None
+    ) = None,
     side: Literal["both", "low", "high"] = "both",
     *,
     data=None,
