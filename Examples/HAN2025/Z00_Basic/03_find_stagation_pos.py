@@ -11,17 +11,20 @@ import numpy as np
 from pivdataprocessor.L01_base import PIVDataProcessorBase as pBase 
 from pivdataprocessor.A01_toolbox import float_precsion
 
-edge_cut = 3
+edge_cut_x = 3
+edge_cut_y = 3
 
 
 # Type 1: Define the flow field center as the location where the mean velocity approaches zero.
 cases1 = ['Case01','Case02','Case03','Case04','Case05','Case06']
+cases1 = ['Case01XY_Z0_Ethanol']
+
 for case in cases1:
     pBase.load_case(case)
     Nx = pBase.CaseInfo.Nx
     Ny = pBase.CaseInfo.Ny
     
-    cutted_range = ((edge_cut,Nx-1-edge_cut),(edge_cut,Ny-1-edge_cut))
+    cutted_range = ((edge_cut_x,Nx-edge_cut_x),(edge_cut_y,Ny-edge_cut_y))
     pBase.CaseInfo.Effective_Range = cutted_range
     
     sum_nine_points = np.zeros((Nx-2,Ny-2), dtype=float_precsion)
@@ -42,17 +45,16 @@ for case in cases1:
     pBase.save_case()
 
 
+
 #Type 2: Specify the center of the measurement region as the center of the flow field.
-cases2 = ['Mori465']
+cases2 = []
 for case in cases2:
     pBase.load_case(case)
     Nx = pBase.CaseInfo.Nx
     Ny = pBase.CaseInfo.Ny
     
-    cutted_range = ((edge_cut,Nx-1-edge_cut),(edge_cut,Ny-1-edge_cut))
+    cutted_range = ((edge_cut_x,Nx-edge_cut_x),(edge_cut_y,Ny-edge_cut_y))
     pBase.CaseInfo.Effective_Range = cutted_range
     pBase.CaseInfo.Central_Position_Flow = (int(Nx/2),int(Ny/2))
-    pBase.CaseInfo.Central_Position_Flow = pBase.CaseInfo.Central_Position_Grid
+    pBase.CaseInfo.Central_Position_Grid = pBase.CaseInfo.Central_Position_Flow
     pBase.save_case()
-
-

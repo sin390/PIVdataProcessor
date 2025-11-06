@@ -15,7 +15,7 @@ from G01_energy_spectrum import EnergySpectrum as ES
 
 from pivdataprocessor.A02_pltcfg import quickset, getplotpath, myaxconfig, mycolors, generatefiglist
 
-cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
+cases = ['Case01XY_Z0_Ethanol', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
 mycolors[6] = 'k'
 # -------------------------------------------------------------------------
 # region

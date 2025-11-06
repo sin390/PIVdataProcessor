@@ -92,8 +92,14 @@ class EnergySpectrum(pTS):
         self.wavenumber_ydir = self.load_nparray_from_bin(self.wavenumber_ydir, self.result_path+'/wavenumber_ydir.bin')
 
 if __name__ == "__main__":
-    cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06', 'Mori465']
+    cases = ['Case01XY_Z0_Ethanol', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
+    # cases = ['Case01XZ_Y00']
+    cases = [case + '_sub2' for case in cases]
     ESs = [() for _ in range(len(cases))]
     for case_id in range(len(cases)):
-        ESs[case_id] = EnergySpectrum(cases[case_id])
+        pBase.load_case(cases[case_id])
+        d_array_nozzle = 12  # mm
+        x_lines = int(2*d_array_nozzle/pBase.dX[0])
+        y_lines = int(d_array_nozzle/pBase.dX[1])
+        ESs[case_id] = EnergySpectrum(cases[case_id], avg_ylines_for_x = y_lines, avg_xlines_for_y = x_lines)
         ESs[case_id].calculate()

@@ -89,9 +89,9 @@ class ReynoldsStress(pTS):
         self.b = self.load_nparray_from_bin(self.b, self.result_path+'/b.bin')
 
 if __name__ == "__main__":
-    cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
-    cases = ['Mori465']
-    cases = [case + '_sub2' for case in cases]
+    cases = ['Case01XY_Z0_Ethanol', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
+    # cases = ['Case01XY_Z0_Ethanol']
+    # cases = [case + '_sub1' for case in cases]
     for case_id in range(len(cases)):
         RS = ReynoldsStress(cases[case_id])
         RS.calculate()

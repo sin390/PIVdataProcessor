@@ -7,7 +7,6 @@
 '''
 
 import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid1.inset_locator import inset_axes, mark_inset
 import numpy as np
 from scipy.interpolate import interp1d
 
@@ -17,6 +16,7 @@ from G01_energy_spectrum import EnergySpectrum as ES
 from pivdataprocessor.A02_pltcfg import quickset, getplotpath, myaxconfig, mycolors, generatefiglist
 
 cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
+cases = ['Case01', 'Case01XZ_Y00', 'Case03', 'Case04', 'Case05', 'Case06']
 mycolors[6] = 'k'
 # -------------------------------------------------------------------------
 # region
@@ -38,6 +38,7 @@ xlims = [(0.8e2,1e4)]
 ylims = [(0.5,2)]
 figformat = '.pdf'
 case_titles = ['Case 1', 'Case 2', 'Case 3', 'Case 4', 'Case 5', 'Case 6', 'Mori et al.']
+case_titles = ['Case 1', 'Case 1XZ_Y00', 'Case 3', 'Case 4', 'Case 5', 'Case 6', 'Mori et al.']
 for fig_id in range(fig_number):
     ax = axess[fig_id][0]
     axconfig = myaxconfig(ax = ax)
@@ -47,31 +48,50 @@ for fig_id in range(fig_number):
     axconfig.ylim = ylims[fig_id]
     axconfig.apply()
 
+inter_kind = 'linear'
+
 for case_number in range(len(cases)):
     es = ES(cases[case_number])
     es.load()
 
     fig_id = 0
     ax = axess[fig_id][0]    
+    
     k1 = es.wavenumber_xdir
     E11 = es.spec_xdir[0]
-    f1 = interp1d(k1, E11, kind='cubic', fill_value="extrapolate")    
+    f1 = interp1d(np.log(k1), np.log(E11), kind=inter_kind, fill_value="extrapolate")
+
     k2 = es.wavenumber_ydir
     E22 = es.spec_ydir[1]
-    f2 = interp1d(k2, E22, kind='cubic', fill_value="extrapolate")
+    f2 = interp1d(np.log(k2), np.log(E22), kind=inter_kind, fill_value="extrapolate")
 
-    left = np.max([k1[0],k2[0]])
-    right = np.min([k1[-1],k2[-1]])
-    k = np.linspace(left,right,100)
-    E11_uni = f1(k)
-    E22_uni = f2(k)
+    left = np.max([k1[0], k2[0]])
+    right = np.min([k1[-1], k2[-1]])
+    k = np.logspace(np.log10(left), np.log10(right), 100)
+
+    E11_uni = np.exp(f1(np.log(k)))
+    E22_uni = np.exp(f2(np.log(k)))
+
     ax.set_xscale('log')
     stat = 0
-    ax.plot(k[stat:], E11_uni[stat:]/E22_uni[stat:] ,linestyle = '-', color = mycolors[case_number], label = case_titles[case_number])
-    ax.axhline(1, linestyle = '-.', linewidth = 0.8, color = 'k')
+    ax.plot(k[stat:], E11_uni[stat:] / E22_uni[stat:], 
+            linestyle='-', color=mycolors[case_number], 
+            label=case_titles[case_number])
+    ax.axhline(1, linestyle='-.', linewidth=0.8, color='k')
 
-f_EuEv = './Z05_Energy_Spectrum/Mori605/EuEv_Ratio_x605mm.txt'
-k, EuEv = np.loadtxt(f_EuEv, unpack=True,skiprows=1)
+
+f_Eu = './Z05_Energy_Spectrum/Mori605/Eu_kx_x605mm.txt'
+f_Ev = './Z05_Energy_Spectrum/Mori605/Ev_ky_x605mm.txt' 
+k1, E11 = np.loadtxt(f_Eu, unpack=True,skiprows=1)
+k2, E22 = np.loadtxt(f_Ev, unpack=True,skiprows=1)
+f1 = interp1d(np.log(k1), np.log(E11), kind=inter_kind, fill_value="extrapolate")
+f2 = interp1d(np.log(k2), np.log(E22), kind=inter_kind, fill_value="extrapolate")
+left = np.max([k1[0], k2[0]])
+right = np.min([k1[-1], k2[-1]])
+k = np.logspace(np.log10(left), np.log10(right), 100)
+E11_uni = np.exp(f1(np.log(k)))
+E22_uni = np.exp(f2(np.log(k)))
+EuEv = E11_uni/E22_uni
 
 fig_id = 0
 ax = axess[fig_id][0]

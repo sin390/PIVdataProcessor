@@ -15,6 +15,7 @@ from pivdataprocessor.A01_toolbox import nanmean_filter2d
 from pivdataprocessor.A02_pltcfg import quickset, getplotpath, myaxconfig, mycolors, generatefiglist
 
 cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
+cases = ['Case01']+['Case01XZ_Y00' for _ in range(5)]
 
 # -------------------------------------------------------------------------
 # region

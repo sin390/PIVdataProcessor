@@ -10,5 +10,6 @@ from pivdataprocessor.L01_base import PIVDataProcessorBase as pBase
 
 # cases = ['Case01','Case02','Case03','Case04','Case05','Case06','Mori465']
 cases = ['Case01','Case02','Case03','Case04','Case05','Case06']
+cases = ['Case01XY_Z0_Ethanol']
 for case in cases:
     pBase.preprocess_data(case)

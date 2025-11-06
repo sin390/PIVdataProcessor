@@ -14,7 +14,7 @@ from G01_autocorrelation import AutoCorrelation as AC
 
 from pivdataprocessor.A02_pltcfg import quickset, getplotpath, myaxconfig, mycolors, generatefiglist
 
-cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06', 'Mori465']
+cases = ['Case01XY_Z0_Ethanol', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
 
 # -------------------------------------------------------------------------
 # region

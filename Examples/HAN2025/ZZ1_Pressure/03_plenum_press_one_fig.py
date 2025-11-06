@@ -32,7 +32,7 @@ figtitles = ['plenum_pressure']
 xlims = [(-0.5,10)]
 ylims = [(0,500)]
 xtricks = [[0,2,4,6,8,10]]
-figformat = '.eps'
+figformat = '.jpg'
 
 ax = axess[0][0]
 axconfig = myaxconfig(ax = ax)
@@ -57,8 +57,8 @@ files = ['20241221_125452_973.CSV',
 
 env_press = 102
 case_number = 4
-left = ps(data_folder+cases[case_number]+'/'+ files[case_number],col = 2) 
-right = ps(data_folder+cases[case_number]+'/'+ files[case_number],col = 1) 
+left = ps(data_folder+cases[case_number]+'/'+ files[case_number],col = 2, moving_avg_seconds=-1) 
+right = ps(data_folder+cases[case_number]+'/'+ files[case_number],col = 1, moving_avg_seconds=-1) 
 axess[0][0].plot(left.time, left.press+ env_press, linestyle = '-', color = mycolors[0], label = fr'left side')
 axess[0][0].plot(right.time, right.press+ env_press, linestyle = '-', color = mycolors[1], label = fr'right side')
 axess[0][0].axhline(y=285, color='k', dashes=(6, 6), linewidth=0.5)

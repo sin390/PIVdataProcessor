@@ -15,7 +15,7 @@ from pivdataprocessor.A01_toolbox import WelfordStatisticsCalculator as WSC
 from pivdataprocessor.A02_pltcfg import quickset, getplotpath, myaxconfig, mycolors, generatefiglist
 from G01_fitted_slope import FittedSlope
 
-cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
+cases = ['Case01XZ_Y00', 'Case01XZ_Y20']
 
 # -------------------------------------------------------------------------
 # region
@@ -23,38 +23,41 @@ fig_path = getplotpath()
 pBase.rm_and_create_directory(fig_path)
 quickset()
 cm_to_inch = lambda cm: cm / 2.54
-figsize_inch = (cm_to_inch(16), cm_to_inch(10))
+figsize_inch = (cm_to_inch(12), cm_to_inch(6))
 # -------------------------------------------------------------------------
 # endregion
 
-fig_number = 2
-figs, axess = generatefiglist(fig_number, 2, 3, figsize_inch)
+fig_number = 1
+figs, axess = generatefiglist(fig_number, 1, 2, figsize_inch)
 
-cases_title = ['Case 1', 'Case 2', 'Case 3', 'Case 4', 'Case 5', 'Case 6']
-xlables = [r'$x$ (mm)']
-ylables = [r'$y$ (mm)']
-xlims = [(-45,45)]
-xtricks = [-40,-20,0,20,40]
-ylims = [(-28,28)]
-ytricks = [-20,0,20]
+cases_title = ['Case01XZ_Y00', 'Case02XZ_Y20']
+d_array_nozzle = 12  # mm
+Uin = 404     # m/s
+xlables = [r'$x/d_{a}$']
+ylables = [r'$z/d_{a}$']
+xlims = [(-4,4)]
+xtricks = [-4,-2,0,2,4]
+ylims = [(-2.3,2.3)]
+ytricks = [-2,0,2]
+vmin, vmax = 0.25,0.75
 
 
-colorbarlabels = [r'$\left|S_{11}\right|/\left|S_{11}\right|_{\mathrm{max}}$', 
-                  r'$S_{22}/S_{22, \mathrm{max}}$']
-figtitles = ['Normalized_S11','Normalized_S22']
+colorbarlabels = [r'$-S_{33}/S_{11}$']
+figtitles = ['S33_S11']
 figformat = '.pdf'
 
 first_im = [None for _ in range(fig_number)]
 max_values = np.zeros(shape=(fig_number,6))
 min_values = np.zeros(shape=(fig_number,6))
-for i in range(2):
-    for j in range(3):
+
+for i in range(1):
+    for j in range(2):
         case_number = i*3+j 
         for axes_number in range(len(axess)):
             ax = axess[axes_number][case_number]
             axconfig = myaxconfig(ax = ax)
             # axconfig.title = cases_title[case_number]
-            if i == 1:
+            if i == 0:
                 axconfig.xlable = xlables[0]
             if j == 0:
                 axconfig.ylable = ylables[0]
@@ -76,59 +79,36 @@ for i in range(2):
         bottom,up = pBase.CaseInfo.Effective_Range[1]
 
         
-        'fig1'
         fig_id = 0
         ax = axess[fig_id][case_number]
-        X = pBase.X[0][left:right,bottom:up].T
-        Y = pBase.X[1][left:right,bottom:up].T
-        S11_max = np.nanmax(-fs.fit_avg_dUdX[0][0][left:right,bottom:up])
-        N_S11 = -fs.fit_avg_dUdX[0][0][left:right,bottom:up]/S11_max
-        N_S11 = N_S11.T
-
-        max_values[fig_id,case_number] = np.nanmax(N_S11)
-        min_values[fig_id,case_number] = np.nanmin(N_S11)
-
-        vmin, vmax = 0,1
-        c = ax.imshow(N_S11, extent=[X.min(), X.max(), Y.min(), Y.max()],
-                    cmap='viridis', origin='lower', interpolation='None',
-                    vmin=vmin, vmax=vmax)
-        contours = ax.contour(X, Y, N_S11, levels=[0.4,0.6,0.8], colors='black', linestyles = '-', linewidths=0.5)
-
-        if case_number == 0:
-            first_im[fig_id] = c         
-       
-        
-        'fig2'
-        fig_id = 1
-        ax = axess[fig_id][case_number]
-        X = pBase.X[0][left:right,bottom:up].T
-        Y = pBase.X[1][left:right,bottom:up].T
-        S22_max = np.nanmax(fs.fit_avg_dUdX[1][1][left:right,bottom:up])
-        N_S22 = fs.fit_avg_dUdX[1][1][left:right,bottom:up]/S22_max
+        X = pBase.X[0][left:right,bottom:up]/d_array_nozzle
+        X = X.T
+        Y = pBase.X[1][left:right,bottom:up]/d_array_nozzle
+        Y = Y.T
+        N_S22 = fs.fit_avg_dUdX[1][1][left:right,bottom:up]/(-fs.fit_avg_dUdX[0][0][left:right,bottom:up])
         N_S22 = N_S22.T
         max_values[fig_id,case_number] = np.nanmax(N_S22)
         min_values[fig_id,case_number] = np.nanmin(N_S22)
- 
-        vmin, vmax = 0,1
+
         c = ax.imshow(N_S22, extent=[X.min(), X.max(), Y.min(), Y.max()],
-                    cmap='viridis', origin='lower', interpolation='None',
+                    cmap='turbo', origin='lower', interpolation='None',
                     vmin=vmin, vmax=vmax)
-        contours = ax.contour(X, Y, N_S22, levels=[0.4,0.6,0.8], colors='black', linestyles = '-', linewidths=0.5)
+        contours = ax.contour(X, Y, N_S22, levels=[0.3,0.4,0.5,0.6,0.7], colors='black', linestyles = '-', linewidths=0.5)
         if case_number == 0:
             first_im[fig_id] = c         
 
-
-
+colorbarticks = [
+    [0.3,0.4,0.5,0.6,0.7]
+]
 
 for fig_id in range(fig_number):
     print(f'fig_id={fig_id}')
     print(np.nanmin(min_values[fig_id]))
     print(np.nanmax(max_values[fig_id]))    
-    cbar_ax = figs[fig_id].add_axes([0.25, 0.13, 0.5, 0.03])
+    cbar_ax = figs[fig_id].add_axes([0.2, 0.2, 0.6, 0.03])
     colorbar = figs[fig_id].colorbar(first_im[fig_id], cax=cbar_ax, orientation='horizontal', label=colorbarlabels[fig_id])
-    colorbar.set_label(colorbarlabels[fig_id], fontsize=12)
     colorbar.ax.minorticks_off()
-    # colorbar.ax.set_xticks(colorbarticks)
+    colorbar.ax.set_xticks(colorbarticks[fig_id])
     fig = figs[fig_id]
  
     label_index = ['a','b','c','d','e','f']
@@ -139,6 +119,6 @@ for fig_id in range(fig_number):
                     fontsize=12, fontweight='bold',
                     va='top', ha='left')  
 
-    fig.subplots_adjust(left=0.07, right=0.93, top=0.95, bottom=0.25, wspace=0.3, hspace=0.1)
+    fig.subplots_adjust(left=0.1, right=0.93, top=0.95, bottom=0.37, wspace=0.3, hspace=0.1)
     fig.savefig(fig_path + '/' + figtitles[fig_id] + figformat, format=figformat[1:])
 plt.clf()       

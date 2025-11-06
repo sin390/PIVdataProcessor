@@ -9,6 +9,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from pivdataprocessor.L01_base import PIVDataProcessorBase as pBase
+from Z01_VelocityDistribution.G01_fitted_slope import FittedSlope
 from pivdataprocessor.A01_toolbox import nanmean_filter2d
 from pivdataprocessor.A02_pltcfg import quickset, getplotpath, generatefiglist, myaxconfig, mycolors
 
@@ -24,6 +25,7 @@ figsize_inch = (cm_to_inch(16), cm_to_inch(12))
 # endregion
 
 cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
+cases = ['Case01XZ_Y00', 'Case01XZ_Y20', 'Case03', 'Case04', 'Case05', 'Case06']
 colors = mycolors
 styles = [['-','-','-'],['--','--','--']]
 
@@ -76,14 +78,17 @@ for i in range(3):
         plotted_x = np.array([-30, -15, 0, 15, 30]) 
         plotted_y = np.array([-20, -10, 0, 10, 20])
         plotted_x, plotted_y = pBase.pos_mm_to_index_list(plotted_x,plotted_y)
-
+        a = FittedSlope(cases[case_number])
+        a.load_fitted()
         'fig1'
         for k in range(len(plotted_y)):
             plot_x = pBase.X[0][left:right, plotted_y[k]]
             plot_y = pBase.avg_U[0][left:right, plotted_y[k]]
+            plot_y_fit = a.fit_avg_U[0][left:right, plotted_y[k]]
             axess[0][case_number].plot(plot_x, plot_y, linestyle = '-', color = mycolors[k],
                                label = fr'$y = {round(pBase.X[1][0,plotted_y[k]])}~\mathrm{{mm}}$')
-    
+            axess[0][case_number].plot(plot_x, plot_y_fit, linestyle = '--', color = mycolors[k],
+                               label = fr'$y = {round(pBase.X[1][0,plotted_y[k]])}~\mathrm{{mm}}$')
             errorbar_x,_ = pBase.pos_mm_to_index_list([-25,0,25],[0,0,0])
             err_x = [pBase.X[0][xi,plotted_y[k]] for xi in errorbar_x]
             err_y = [pBase.avg_U[0][xi, plotted_y[k]] for xi in errorbar_x]
@@ -97,7 +102,10 @@ for i in range(3):
         for k in range(len(plotted_y)):
             plot_x = pBase.X[0][left:right, plotted_y[k]]
             plot_y = pBase.avg_U[1][left:right, plotted_y[k]]
+            plot_y_fit = a.fit_avg_U[1][left:right, plotted_y[k]]
             axess[1][case_number].plot(plot_x, plot_y, linestyle = '-', color = mycolors[k],
+                               label = fr'$y = {round(pBase.X[1][0,plotted_y[k]])}~\mathrm{{mm}}$')
+            axess[1][case_number].plot(plot_x, plot_y_fit, linestyle = '--', color = mycolors[k],
                                label = fr'$y = {round(pBase.X[1][0,plotted_y[k]])}~\mathrm{{mm}}$')
             
      
@@ -107,15 +115,20 @@ for i in range(3):
         for k in range(len(plotted_x)):
             plot_x = pBase.X[1][plotted_x[k],bottom:up]
             plot_y = pBase.avg_U[0][plotted_x[k],bottom:up]
+            plot_y_fit = a.fit_avg_U[0][plotted_x[k],bottom:up]
             axess[2][case_number].plot(plot_x, plot_y, linestyle = '-', color = mycolors[k],
                                label = fr'$x = {round(pBase.X[0][plotted_x[k],0])}~\mathrm{{mm}}$')
-   
+            axess[2][case_number].plot(plot_x, plot_y_fit, linestyle = '--', color = mycolors[k],
+                               label = fr'$x = {round(pBase.X[0][plotted_x[k],0])}~\mathrm{{mm}}$')
 
         'fig4'
         for k in range(len(plotted_x)):
             plot_x = pBase.X[1][plotted_x[k],bottom:up]
             plot_y = pBase.avg_U[1][plotted_x[k],bottom:up]
+            plot_y_fit = a.fit_avg_U[1][plotted_x[k],bottom:up]
             axess[3][case_number].plot(plot_x, plot_y, linestyle = '-', color = mycolors[k],
+                               label = fr'$x = {round(pBase.X[0][plotted_x[k],0])}~\mathrm{{mm}}$')
+            axess[3][case_number].plot(plot_x, plot_y_fit, linestyle = '--', color = mycolors[k],
                                label = fr'$x = {round(pBase.X[0][plotted_x[k],0])}~\mathrm{{mm}}$')
             _,errorbar_y = pBase.pos_mm_to_index_list([0,0,0],[-12.5,0,12.5])
             err_x = [pBase.X[1][plotted_x[k],yi] for yi in errorbar_y]

@@ -37,7 +37,8 @@ for case_id in range(len(cases1)):
 
 
 #Type 2: Two-point statistics can be applied across the measurement region.
-cases2 = ['Case01','Case02','Case03','Case04','Case05','Case06','Mori465']
+cases2 = ['Case01','Case02','Case03','Case04','Case05','Case06']
+cases2 = ['Case01XY_Z0_Ethanol']
 for case in cases2:
     pBase.load_case(case)   
     pBase.CaseInfo.Uniform_Range = pBase.CaseInfo.Effective_Range

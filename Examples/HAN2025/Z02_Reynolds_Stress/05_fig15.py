@@ -15,7 +15,7 @@ from pivdataprocessor.A01_toolbox import nanmean_filter2d
 from pivdataprocessor.A02_pltcfg import quickset, getplotpath, myaxconfig, mycolors, generatefiglist
 from G01_reynolds_stress import ReynoldsStress as RS
 
-cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
+cases = ['Case01XY_Z0_Ethanol', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
 
 # -------------------------------------------------------------------------
 # region
@@ -31,12 +31,13 @@ fig_number = 1
 figs, axess = generatefiglist(fig_number, 2, 3, figsize_inch)
 
 cases_title = ['Case 1', 'Case 2', 'Case 3', 'Case 4', 'Case 5', 'Case 6']
-xlables = [r'$x$ (mm)']
-ylables = [r'$y$ (mm)']
-xlims = [(-45,45)]
-xtricks = [-40,-20,0,20,40]
-ylims = [(-28,28)]
-ytricks = [-20,0,20]
+d_array_nozzle = 12  # mm
+xlables = [r'$x/d_{a}$']
+ylables = [r'$y/d_{a}$']
+xlims = [(-4,4)]
+xtricks = [-4,-2,0,2,4]
+ylims = [(-2.3,2.3)]
+ytricks = [-2,0,2]
 
 levels = [[0.12*i-0.3 for i in range(6)]]
 norms = [BoundaryNorm(levels[i], ncolors=plt.get_cmap('viridis').N, clip=True) for i in range(len(levels))]
@@ -80,8 +81,10 @@ for i in range(2):
         'fig'
         fig_id = 0
         ax = axess[fig_id][case_number]
-        X = pBase.X[0][left:right,bottom:up].T
-        Y = pBase.X[1][left:right,bottom:up].T
+        X = pBase.X[0][left:right,bottom:up]/d_array_nozzle
+        X = X.T
+        Y = pBase.X[1][left:right,bottom:up]/d_array_nozzle
+        Y = Y.T
         R11 = nanmean_filter2d(rs.uu,filter_size)[left:right,bottom:up]
         R12 = nanmean_filter2d(rs.uv,filter_size)[left:right,bottom:up]
         N_R12 = R12/R11
@@ -91,7 +94,7 @@ for i in range(2):
 
         vmin, vmax = -0.15,0.15
         c = ax.imshow(N_R12, extent=[X.min(), X.max(), Y.min(), Y.max()],
-                    cmap='viridis', origin='lower', interpolation='None',
+                    cmap='bwr', origin='lower', interpolation='None',
                     vmin=vmin, vmax=vmax)
 
         contours = ax.contour(X, Y, N_R12, levels=[-0.09,-0.03,0.03,0.09], colors='black', linestyles = '-', linewidths=0.5)

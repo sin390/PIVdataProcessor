@@ -1,7 +1,7 @@
 import numpy as np
-cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
+cases = ['Case01XY_Z0_Ethanol', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
 
-Temp = np.array([292, 289, 288, 288, 288, 290])
+Temp = np.array([299, 289, 288, 288, 288, 290])
 press = np.array([102000,102000,102000,102000,102000,102000])
 Rho = press/287.05/Temp
 
@@ -12,23 +12,42 @@ Mu = Mu0* ((Temp/T0)**1.5)*(T0+S)/(Temp+S)
 Upsilon = Mu/Rho
 
 
-k2 = np.array([318.27, 322.84, 347.88, 715.24, 683.30, 758.82])
-urms = (k2*2/3)**0.5
-print(urms)
-urms1 = [17.79, 18.37, 19.56, 28.11, 27.68, 29.55]
-print(urms1)
 
-L11 = np.array([24.9, 29.3, 34.1, 28.0, 32.2, 33.3])
-L11 = L11 /1000
+k2 = np.array([268.59, 322.84, 347.88, 715.24, 683.30, 758.82])
+urms = np.sqrt(k2*2/3)
 
-ReL = urms1*L11/Upsilon
-print(f'---\nReL:\n{ReL}\n---')
 
-TimeL = L11/urms1
+urms1 = np.array([16.63, 18.36, 19.54, 28.11, 27.65, 29.53])
+vrms1 = np.array([11.36, 12.32, 12.43, 17.84, 17.27, 17.88])
+print(urms1/vrms1)
+
+k2 = (urms1**2 + vrms1**2+ vrms1**2)/2
+urms = np.sqrt(k2*2/3)
+
+L11 = np.array([27.62, 30.33, 35.17, 28.87, 33.39, 34.86])/1000
+L22 = np.array([22.27, 20.06, 19.65, 18.60, 17.80, 17.33])/1000
+print(L11/L22)
+L = (L11+L22+L22)/3
+
+A=1
+dissipationRate = A *urms**3/L
+print(f'---\ndissipationRate:\n{dissipationRate}\n---')
+
+
+
+TimeL = L/urms
 print(f'---\nTimeL:\n{TimeL}\n---')
 
-S11_avg = np.array([720, 640, 600, 830, 700, 730])
-S11_center = np.array([850,830,750,1080,960,930])
+S11_avg = np.array([665, 640, 600, 830, 700, 730])
+
+Lambda = np.sqrt(10*(Mu/Rho)*k2/dissipationRate)
+print(f'---\nLambda:{Lambda}\n---')
+
+eta = (Mu/Rho)**(3/4)*dissipationRate**(-1/4)
+print(f'---\neta:{eta}\n---')
+
+Re_lambda = Rho* urms * Lambda /Mu
+print(f'---\nRe_lambda:{Re_lambda}\n---')
 
 SL = S11_avg*TimeL
 print(f'---\nSL:{SL}\n---')

@@ -27,6 +27,7 @@ figsize_inch = (cm_to_inch(16), cm_to_inch(12))
 # endregion
 
 cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']   
+cases = ['Case01','Case01XZ_Y00']+['Case01XZ_Y20' for _ in range(5)]
 figs, axess = generatefiglist(10, 3, 2, figsize_inch)
 
 xlables = [r'$x-x_{c}$ (mm)', r'$x-x_{c}$ (mm)', r'$x-x_{c}$ (mm)', r'$x-x_{c}$ (mm)',
@@ -52,7 +53,7 @@ xlims = [(-60,60),(-60,60),(-60,60),(-60,60),
 ylims = [(0,1200),(-600,600),(-600,600),(0,1200),
          (0,1200),(-600,600),(-600,600),(0,1200),
          (0,1),(0,1)]
-figformat = '.eps'
+figformat = '.pdf'
 
 
 
