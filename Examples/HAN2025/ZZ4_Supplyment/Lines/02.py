@@ -51,7 +51,7 @@ ws_filename = '\\ratio.txt'
 
 comment_a = ['XY-plane Z = 12, v_rms(x, y=0, z=12)']
 ws_a = WriteHandler(['x(mm)','v_rms','err(v_rms)','-err(v_rms)'], comment_a)
-ws_a_filename = '\\XY-Z0, v_rms(x,y=0,z=12).txt'
+ws_a_filename = '\\XY-Z12, v_rms(x,y=0,z=12).txt'
 
 comment_b = ['XZ-plane Y = 0, w_rms(x, y=0, z=12)']
 ws_b = WriteHandler(['x(mm)','w_rms','err(w_rms)','-err(w_rms)'],comment_b)

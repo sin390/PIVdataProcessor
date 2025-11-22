@@ -47,7 +47,7 @@ for case in cases1:
 
 
 #Type 2: Specify the center of the measurement region as the center of the flow field.
-cases2 = []
+cases2 = ['Case01XY_Z0_Ethanol','Case01XY_Z12_Ethanol']
 for case in cases2:
     pBase.load_case(case)
     Nx = pBase.CaseInfo.Nx
@@ -55,6 +55,16 @@ for case in cases2:
     
     cutted_range = ((edge_cut_x,Nx-edge_cut_x),(edge_cut_y,Ny-edge_cut_y))
     pBase.CaseInfo.Effective_Range = cutted_range
-    pBase.CaseInfo.Central_Position_Flow = (int(Nx/2),int(Ny/2))
-    pBase.CaseInfo.Central_Position_Grid = pBase.CaseInfo.Central_Position_Flow
+    # pBase.CaseInfo.Central_Position_Flow = (int(Nx/2),int(Ny/2)) 
+
+    X2 = pBase.X[0]**2 + pBase.X[1]**2
+    min_index_flat = np.argmin(X2)
+    min_index = np.unravel_index(min_index_flat, X2.shape)
+    min_index_tuple = (int(min_index[0]),int(min_index[1]))
+    pBase.CaseInfo.Central_Position_Grid = min_index_tuple
+    pBase.CaseInfo.Central_Position_Flow = pBase.CaseInfo.Central_Position_Grid
+    # pBase.CaseInfo.Central_Position_Grid = pBase.CaseInfo.Central_Position_Flow
+    center_x,center_y = pBase.CaseInfo.Central_Position_Grid
+    print(pBase.X[0][center_x,center_y], pBase.X[1][center_x,center_y])
+
     pBase.save_case()

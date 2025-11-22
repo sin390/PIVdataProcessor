@@ -15,7 +15,7 @@ from pivdataprocessor.A02_pltcfg import quickset, getplotpath, myaxconfig, mycol
 
 from G01_SkewFlat import SkewFlat as SF
 
-cases = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
+cases = ['Case01XY_Z0_Ethanol', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
 
 # -------------------------------------------------------------------------
 # region
@@ -41,8 +41,13 @@ xticks = [
     [-50,0,50]
 ]
 ylims = [(-0.1,0.1),(0,6)]
+ylims = [(-1,1),(0,6)]
 yticks = [
     [-0.10,-0.05,0,0.05,0.10],
+    [0,2,4,6]
+]
+yticks = [
+    [-1,-0.5,0,0.5,1],
     [0,2,4,6]
 ]
 figformat = '.pdf'

@@ -22,13 +22,15 @@ vrms1 = np.array([11.36, 12.32, 12.43, 17.84, 17.27, 17.88])
 print(urms1/vrms1)
 
 k2 = (urms1**2 + vrms1**2+ vrms1**2)/2
+
+k2[0] = 0.9
 urms = np.sqrt(k2*2/3)
 
 L11 = np.array([27.62, 30.33, 35.17, 28.87, 33.39, 34.86])/1000
 L22 = np.array([22.27, 20.06, 19.65, 18.60, 17.80, 17.33])/1000
 print(L11/L22)
 L = (L11+L22+L22)/3
-
+L[0] = 0.024
 A=1
 dissipationRate = A *urms**3/L
 print(f'---\ndissipationRate:\n{dissipationRate}\n---')
@@ -39,8 +41,7 @@ TimeL = L/urms
 print(f'---\nTimeL:\n{TimeL}\n---')
 
 S11_avg = np.array([665, 640, 600, 830, 700, 730])
-S22_avg = np.array([335, 321, 303, 413, 349, 359])
-S = (S11_avg + 2*S22_avg + 2*S22_avg)/3
+S11_avg[0] = 50
 
 Lambda = np.sqrt(10*(Mu/Rho)*k2/dissipationRate)
 print(f'---\nLambda:{Lambda}\n---')

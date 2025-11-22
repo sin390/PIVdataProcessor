@@ -50,7 +50,7 @@ def delete_sub_case(case:str):
 
 
 cases = ['Case01','Case02','Case03','Case04','Case05','Case06']
-cases = ['Case01XY_Z0_Ethanol']
+cases = ['Case01XY_Z0_Ethanol','Case01XY_Z12_Ethanol']
 for case in cases:
     # delete_sub_case(case)
     divide_case(case)

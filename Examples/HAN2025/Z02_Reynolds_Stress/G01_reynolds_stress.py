@@ -90,11 +90,14 @@ class ReynoldsStress(pTS):
 
 if __name__ == "__main__":
     cases = ['Case01XY_Z0_Ethanol', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
-    # cases = ['Case01XY_Z0_Ethanol']
-    # cases = [case + '_sub1' for case in cases]
+    # cases = ['Case01XY_Z0_Ethanol','Case01XY_Z12_Ethanol']
+    # cases = [case + '_sub2' for case in cases]
     for case_id in range(len(cases)):
         RS = ReynoldsStress(cases[case_id])
         RS.calculate()
         left,right = pBase.CaseInfo.Effective_Range[0]
         bottom, up = pBase.CaseInfo.Effective_Range[1]        
         RS.report(f'k2,avg = {np.nanmean(RS.k2[left:right,bottom:up])} (m2/s2)')
+        RS.report(f'uu,avg = {np.nanmean(RS.uu[left:right,bottom:up])} (m2/s2)')
+        RS.report(f'vv,avg = {np.nanmean(RS.vv[left:right,bottom:up])} (m2/s2)')
+        RS.report(f'uv,avg = {np.nanmean(RS.uv[left:right,bottom:up])} (m2/s2)')

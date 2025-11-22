@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from pivdataprocessor.L01_base import PIVDataProcessorBase as pBase
-from pivdataprocessor.L03_sensor_handler import press_sensor_PSE540 as ps
+from ZZ1_Pressure.G01_sensor_handler import press_sensor_PSE540 as ps
 from pivdataprocessor.A02_pltcfg import getplotpath
 from pivdataprocessor.A01_toolbox import WriteHandler as WH
 

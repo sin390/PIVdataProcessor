@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from pivdataprocessor.L01_base import PIVDataProcessorBase as pBase
-from pivdataprocessor.L03_sensor_handler import temp_sensor as ts
+from ZZ2_Temperature.G01_sensor_handler import temp_sensor as ts
 from pivdataprocessor.A02_pltcfg import quickset, getplotpath, generatefiglist, myaxconfig, mycolors
 
 data_folder = './ZZ2_Temperature/02/'

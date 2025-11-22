@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from pivdataprocessor.L01_base import PIVDataProcessorBase as pBase
-from pivdataprocessor.L03_sensor_handler import press_sensor_PSE543 as ps
+from ZZ1_Pressure.G01_sensor_handler import press_sensor_PSE540 as ps
 from pivdataprocessor.A02_pltcfg import quickset, getplotpath, generatefiglist, myaxconfig, mycolors
 
 data_folder = './ZZ1_Pressure/02/'
