@@ -55,8 +55,8 @@ class EnergySpectrum(pTS):
                 for y_line in range(self.X_avg_Yrange[0],self.X_avg_Yrange[1]+1):
                     fluc_u = pBase.fluc_U[0][left:right,y_line]
                     fluc_v = pBase.fluc_U[1][left:right,y_line]
-                    fft_u = np_fft(fluc_u,pBase.dX[0])
-                    fft_v = np_fft(fluc_v,pBase.dX[0])
+                    fft_u = np_fft(fluc_u,pBase.dX[0]/1000)
+                    fft_v = np_fft(fluc_v,pBase.dX[0]/1000)
                     fft_u.fft()
                     fft_v.fft()
                     self.__tmp_xdir[0], self.wavenumber_xdir = fft_u.get_result()
@@ -66,8 +66,8 @@ class EnergySpectrum(pTS):
                 for x_line in range(self.Y_avg_Xrange[0],self.Y_avg_Xrange[1]+1):
                     fluc_u = pBase.fluc_U[0][x_line,bottom:up]
                     fluc_v = pBase.fluc_U[1][x_line,bottom:up]
-                    fft_u = np_fft(fluc_u,pBase.dX[1])
-                    fft_v = np_fft(fluc_v,pBase.dX[1])
+                    fft_u = np_fft(fluc_u,pBase.dX[1]/1000)
+                    fft_v = np_fft(fluc_v,pBase.dX[1]/1000)
                     fft_u.fft()
                     fft_v.fft()
                     self.__tmp_ydir[0], self.wavenumber_ydir = fft_u.get_result()
