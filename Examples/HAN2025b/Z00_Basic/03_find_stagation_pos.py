@@ -10,12 +10,13 @@ import numpy as np
 
 from pivdataprocessor.L01_base import PIVDataProcessorBase as pBase 
 from pivdataprocessor.A01_toolbox import float_precsion
+import ZZZ_Result_Manager.A01_cases as A01
 
-edge_cut = 3
+edge_cut = 5
 
 
 # Type 1: Define the flow field center as the location where the mean velocity approaches zero.
-cases1 = ['Case01','Case02','Case03','Case04','Case05','Case06']
+cases1 = []
 for case in cases1:
     pBase.load_case(case)
     Nx = pBase.CaseInfo.Nx
@@ -43,7 +44,7 @@ for case in cases1:
 
 
 #Type 2: Specify the center of the measurement region as the center of the flow field.
-cases2 = ['Mori465']
+cases2 = A01.cases_f + A01.cases_w
 for case in cases2:
     pBase.load_case(case)
     Nx = pBase.CaseInfo.Nx

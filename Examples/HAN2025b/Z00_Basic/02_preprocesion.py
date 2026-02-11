@@ -6,8 +6,9 @@
 =========================
 '''
 
-from pivdataprocessor.L01_base import PIVDataProcessorBase as pBase 
+from pivdataprocessor.L01_base import PIVDataProcessorBase as pBase
+import ZZZ_Result_Manager.A01_cases as A01
 
-cases = ['Case01','Case02','Case03','Case04','Case05','Case06']
-for case in cases:
+
+for case in A01.cases_w:
     pBase.preprocess_data(case)
