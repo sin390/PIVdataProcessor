@@ -93,8 +93,8 @@ class FilterManager(GT):
         self.filter_param_table.set(id, effective_range = effective_Range)
         self.filter_param_table.set(id, scale_in_grid = Lf_in_mm[0]/dx_in_mm[0])
 
-    def calculate_frame(self, filter_id, run_id, frame_id, if_cal_du = True):
-        base_path = self.path_rule(0, run_id, frame_id)
+    def calculate_frame(self, filter_id, run_id, frame_id, if_cal_du = True, base = -1):
+        base_path = self.path_rule(base, run_id, frame_id)
         base_u = self.load_nparray_from_bin(self.u, base_path+'/u.bin')
         sigma_in_grid = self.filter_param_table.get(filter_id)['sigma_in_grid']
         coef_truncate = self.filter_param_table.get(filter_id)['truncate_coef_in_Lf']
@@ -105,7 +105,7 @@ class FilterManager(GT):
             for i in range(2):
                 self.dudx[i] = scalar_field_5points_stencil(self.u[i], self.dx_in_m[0], self.dx_in_m[1])
     
-    def calculate_all_and_save(self):
+    def calculate_all_and_save(self, base = -1):
         ids = self.filter_param_table.ids()
         frames_in_runs = self.filter_param_table.get(0)['frames_in_runs']
         self.empty_directory(self.result_path,('0','-1'))
@@ -117,7 +117,7 @@ class FilterManager(GT):
             coef_truncate = self.filter_param_table.get(filter_id)['truncate_coef_in_Lf']
             for run_id in range(len(frames_in_runs)):
                 for frame_id in range(frames_in_runs[run_id]):
-                    base_path = self.path_rule(0, run_id, frame_id)
+                    base_path = self.path_rule(base, run_id, frame_id)
                     base_u = self.load_nparray_from_bin(self.u, base_path+'/u.bin')
                     for i in range(2):
                         self.u[i] = self.nan_gaussian_filter(base_u[i], sigma=(sigma_in_grid[0], sigma_in_grid[1]), 
@@ -169,14 +169,22 @@ class FilterManager(GT):
                 result += f'/Frame{frame_id}'
         return result
 
-from ZZZ_Result_Manager.A01_cases import cases, cases_f, cases_w, cases_select, coeffs_to_eta
+# from ZZZ_Result_Manager.A01_cases import cases_f,cases_w
+# if __name__ == "__main__":
+#     from Z11_Dissipation_Rate.G01_dissipation_rate import DissipationRate as DS
+#     for case_id, case in enumerate(cases_f+cases_w):
+#         fm = FilterManager(case)
+#         fm.init_filter_param_table(sigma_in_dx=0.5)
+
+from ZZZ_Result_Manager.A01_cases import cases_select_w,cases_select_f, cases_select, coeffs_to_eta
 if __name__ == "__main__":
-    from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
+    from Z11_Dissipation_Rate.G01_dissipation_rate import DissipationRate as DS
     for case_id, case in enumerate(cases_select):
-        fm = FilterManager(case)
+        fm = FilterManager(cases_select_w[case_id])
         fm.init_filter_param_table(sigma_in_dx=0.5)
-        rm = RM(cases[case_id])
-        eta = rm.result_table.get(3)['eta']*1000
+
+        ds = DS(cases_select_f[case_id], 'gaussian',-1)
+        eta = ds.result_json.get(0)['eta']*1000
         for coeff_id, coeff in enumerate(coeffs_to_eta):
             coeff_id += 1
             fm.add_filter_param(coeff_id,[coeff*eta,coeff*eta],1)

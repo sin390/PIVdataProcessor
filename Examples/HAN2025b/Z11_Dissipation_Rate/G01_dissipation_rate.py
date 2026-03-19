@@ -111,7 +111,7 @@ def worker(args):
     case, filter, p = args
     ds = DissipationRate(case, filter, filter_id=p)
     print(case,filter,p)
-    return ds.calculate(assumption='axisymmetric')
+    return ds.calculate(assumption='weak_isotropic')
 if __name__ == '__main__':
     from ZZZ_Result_Manager.A01_cases import cases, cases_f,cases_w
     from multiprocessing import Pool  

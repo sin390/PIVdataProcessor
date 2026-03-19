@@ -177,7 +177,7 @@ class AutoCorrelation(pTS):
         self.Integral_length = self.load_nparray_from_bin(self.Integral_length, self.result_path+'/Integral_length.bin')
 
 if __name__ == "__main__":
-    cases = A01.cases_f
+    cases = A01.cases_w
     for case_id in range(len(cases)):
         AC = AutoCorrelation(cases[case_id])
         AC.calculate(start_value=0.5,end_value=1e-5)

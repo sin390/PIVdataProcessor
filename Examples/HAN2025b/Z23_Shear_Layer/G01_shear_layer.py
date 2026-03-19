@@ -37,7 +37,7 @@ class ShearLayer(GT):
 
     def calculate_general(self, deg_ranges=((0,30),),coef_threshold=2):
         if deg_ranges == None:
-            result_path = self.result_path + self.td.vfh.middle_path() + '/general'
+            result_path = self.result_path + self.td.vfh.middle_path() + '/general' 
             self.rm_and_create_directory(result_path)
         else:
             deg_folder = '/deg'
@@ -142,7 +142,7 @@ class ShearLayer(GT):
 
 
 def worker(args):
-    case, filter, p, Lf, deg_ranges  = args
+    case, filter, p, Lf, coef_threshold, deg_ranges  = args
     sl = ShearLayer(case, filter, filter_id=p)
     if filter == 'gaussian':
         coef = 7.5
@@ -150,14 +150,15 @@ def worker(args):
         coef = 4.5
     sl.prepare_BRF_coordinate(coef*Lf, N=100)
     print (f'Started:{args}')
-    sl.calculate_general(deg_ranges,coef_threshold=1.5)
+    sl.calculate_general(deg_ranges,coef_threshold=coef_threshold)
     return print (f'Finished:{args}')
 
 
 if __name__ == '__main__':
     from multiprocessing import Pool  
     from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
-    from ZZZ_Result_Manager.A01_cases import cases, cases_w, cases_select, coeffs_to_eta
+    from Z11_Dissipation_Rate.G01_dissipation_rate import DissipationRate as DS
+    from ZZZ_Result_Manager.A01_cases import cases_select, cases_select_f,cases_select_w, coeffs_to_eta
 
     filter = 'gaussian'
     for coeff_id, coeff in enumerate(coeffs_to_eta):
@@ -166,9 +167,10 @@ if __name__ == '__main__':
         with Pool() as pool:
             tasks = []
             for case_id, case in enumerate(cases_select):
-                    rm = RM(cases[case_id])
-                    Lf = rm.result_table.get(40+coeff_id)['Lf_in_mm']
-                    tasks.append((case, filter, coeff_id, Lf, None))
+                    ds = DS(cases_select_f[case_id], 'gaussian',-1)
+                    eta = ds.result_json.get(0)['eta']*1000
+                    Lf = eta * coeff
+                    tasks.append((cases_select_w[case_id], filter, coeff_id, Lf, 1.5, None))
             results = pool.map(worker, tasks)  
 
         
@@ -177,8 +179,9 @@ if __name__ == '__main__':
             with Pool() as pool:
                 tasks = []
                 for case_id, case in enumerate(cases_select):
-                        rm = RM(cases[case_id])
-                        Lf = rm.result_table.get(40+coeff_id)['Lf_in_mm']
-                        tasks.append((case, filter, coeff_id, Lf, deg))
+                        ds = DS(cases_select_f[case_id], 'gaussian',-1)
+                        eta = ds.result_json.get(0)['eta']*1000
+                        Lf = eta * coeff
+                        tasks.append((cases_select_w[case_id], filter, coeff_id, Lf, 1.5, deg))
                 results = pool.map(worker, tasks)  
 

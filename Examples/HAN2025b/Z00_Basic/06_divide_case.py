@@ -11,11 +11,11 @@ from pivdataprocessor.L01_base import CaseInfoClass as CI
 import copy, shutil, os
 
 divide_number = 2
-sub_case_extension = ['_sub1', '_sub2']
+sub_case_extension = [f'_sub{i+1}' for i in range(divide_number)]
 
 def divide_case(case:str):
     pBase.load_case(case)
-    root_raw_data_path = pBase.get_paths()['RawData'] + "/bin"
+    root_raw_data_path = pBase.get_paths()['RawData'] + "/csv"
     root_case_info_file = pBase.get_paths()['CaseInfo']
     root_frames_in_runs = pBase.frame_numbers_in_runs.copy()
     d_run = len(root_frames_in_runs) // divide_number
@@ -34,18 +34,22 @@ def divide_case(case:str):
             run_start = i * d_run
         
         pBase.frame_numbers_in_runs = root_frames_in_runs[run_start:run_start+run_numbers]
-        target_raw_data_path = pBase.get_paths()['RawData'] + "/bin"
+        target_raw_data_path = pBase.get_paths()['RawData'] + "/csv"
         for sub_run_number in range(run_numbers):
-            src_run_path = root_raw_data_path + pBase.Paths.Run_path_rootword + f'{run_start+sub_run_number}'
-            dst_run_path = target_raw_data_path + pBase.Paths.Run_path_rootword + f'{sub_run_number}'
+            src_run_path = root_raw_data_path + pBase.Paths.Run_path_rootword + f'{run_start+sub_run_number:02d}'
+            dst_run_path = target_raw_data_path + pBase.Paths.Run_path_rootword + f'{sub_run_number:02d}'
             pBase.rm_and_create_directory(dst_run_path,ifcreate = False)
             shutil.copytree(src_run_path,dst_run_path)
-        pBase.preprocess_data(case + sub_case_extension[i], ifbin = True)
+        pBase.preprocess_data(case + sub_case_extension[i])
 
-        
+def delete_sub_case(case:str):
+    for i in range(divide_number):
+        pBase.load_case(case)
+        root_path = pBase.get_paths()['CurrentCase'] + sub_case_extension[i]
+        pBase.rm_and_create_directory(root_path, ifcreate=False)
 
 
-
-cases = ['Case01','Case02','Case03','Case04','Case05','Case06']
-for case in cases:
+from ZZZ_Result_Manager.A01_cases import cases, cases_w, cases_f
+for case in cases_f:
+    # delete_sub_case(case)
     divide_case(case)

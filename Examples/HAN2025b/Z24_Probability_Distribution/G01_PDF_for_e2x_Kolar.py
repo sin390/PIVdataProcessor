@@ -72,17 +72,18 @@ def worker(args):
     return pdf.calculate(bins=bins,hist_range=hist_range,coef_threshold=1.5)
 if __name__ == '__main__':
     from multiprocessing import Pool 
-    from ZZZ_Result_Manager.A01_cases import cases, cases_f, cases_w, cases_select
+    from ZZZ_Result_Manager.A01_cases import cases_select,cases_select_w,coeffs_to_eta
     from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
     d_deg = 10
     deg_range = (0, 180)
     bins = int((deg_range[1]-deg_range[0])/d_deg)+1
 
     print('Gaussian_lowpass')
-    filter = 'gaussian' 
-    filter_param = 4
-    tasks = []
-    with Pool() as pool:
-        for case in cases_select:
-            tasks.append((case, filter, filter_param, bins, deg_range))
-        results = pool.map(worker, tasks)   
+    filter = 'gaussian'
+    for filter_id, _ in enumerate(coeffs_to_eta): 
+        filter_param = filter_id+1
+        tasks = []
+        with Pool() as pool:
+            for case in cases_select_w:
+                tasks.append((case, filter, filter_param, bins, deg_range))
+            results = pool.map(worker, tasks)   

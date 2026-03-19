@@ -15,7 +15,7 @@ from Z23_Shear_Layer.G01_shear_layer import ShearLayer as SL
 from Z23_Shear_Layer.T02_find_crossing import find_threshold_crossings_quadratic_minimal
 
 from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
-from ZZZ_Result_Manager.A01_cases import cases, cases_f,cases_select, coeffs_to_eta
+from ZZZ_Result_Manager.A01_cases import cases_select, cases_select_f, cases_select_w, coeffs_to_eta
 from ZZZ_Result_Manager.A01_cases import degs
 
 degs += [None,]
@@ -23,8 +23,8 @@ for filter_id,coeff in enumerate(coeffs_to_eta):
     filter_id += 1
     log_id = 40 + filter_id
     for case_id, case in enumerate(cases_select):
-        sl = SL(case, 'gaussian', filter_id)
-        rm = RM(cases[case_id])
+        sl = SL(cases_select_w[case_id], 'gaussian', filter_id)
+        rm = RM(case)
         Lf_in_mm = rm.result_table.get(log_id)['Lf_in_mm']
         eps = rm.result_table.get(3)['eps']
         eta = rm.result_table.get(3)['eta']

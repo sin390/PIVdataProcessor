@@ -314,15 +314,14 @@ class TripleDecomposition(GH):
 
 
 if __name__ == "__main__":
-    from ZZZ_Result_Manager.A01_cases import cases, case_labels, cases_f, cases_w, cases_select, coeffs_to_eta
     from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
-
+    from ZZZ_Result_Manager.A01_cases import cases_select, cases_select_f, cases_select_w, coeffs_to_eta
 
     # for case in cases_w:
     #     td = TripleDecomposition(case, 'gaussian', 3)
     #     td.cal_avg()
     for coeff_id, coeff in enumerate(coeffs_to_eta):
         coeff_id += 1
-        for case in cases_select:
-            td = TripleDecomposition(case, 'gaussian', coeff_id)
+        for case_id, case in enumerate(cases_select):
+            td = TripleDecomposition(cases_select_w[case_id], 'gaussian', coeff_id)
             td.cal_avg()
