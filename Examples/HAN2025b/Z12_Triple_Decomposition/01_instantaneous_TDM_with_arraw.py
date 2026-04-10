@@ -11,7 +11,7 @@ from Z02_Velocity_Field_Handler.G01_velocity_field_handler import VelocityFieldH
 import numpy as np
 from Q01_Plot.L02_cloud_plot import CloudFigure, add_length_line
 from G01_triple_decomposition import TripleDecomposition as TD
-from ZZZ_Result_Manager.A01_cases import cases, case_labels, cases_f, cases_w, cases_select
+from ZZZ_Result_Manager.A01_cases import cases,  cases_f, cases_w, cases_select, cases_select_w
 from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
 
 quickset()
@@ -24,18 +24,18 @@ CF = CloudFigure(
 )
 
 case_id = 0
-case_s = cases_select[case_id]
+case_w = cases_select_w[case_id]
 case = cases[case_id]
 
 rm = RM(case)
 eta = rm.result_table.get(3)['eta']
 nu = rm.result_table.get(3)['kinetic_viscosity']
 
-filter_id = 1
+filter_id = 7
 run_id = 3
 frame_id = 8
 
-figformat = ".png"
+figformat = ".jpg"
 fig_path = getplotpath()
 result_fig = f"{fig_path}/instantaneous_TDM_with_arraw"
 
@@ -45,7 +45,7 @@ Label = ['' for _ in range(3)]
 mag_max = [0.0 for _ in range(3)]
 
 
-td = TD(case_s, 'gaussian', filter_id)
+td = TD(case_w, 'gaussian', filter_id)
 td.cal_frame(run_id,frame_id)
 
 e_range = td.effctive_range

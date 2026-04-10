@@ -21,7 +21,7 @@ for case_id, case in enumerate(cases_select):
     vrms = np.sqrt(rs.vv)
     avg_urms = np.nanmean(urms[left:right,bottom:up])
     avg_vrms = np.nanmean(vrms[left:right,bottom:up])
-    rm.result_table.set(result_id, urms=avg_urms, vrms=avg_vrms)
+    rm.result_table.set(result_id, urms=avg_urms, vrms=avg_vrms, ratio_uvrms = avg_urms/avg_vrms)
 
     pBase.load_case(cases_select_w[case_id])
     avg_U = np.nanmean(pBase.avg_U[0][left:right,bottom:up])
