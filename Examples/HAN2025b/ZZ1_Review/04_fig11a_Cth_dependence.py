@@ -2,7 +2,7 @@
 =========================
 = Author:   HAN Zexu    =
 = Version:  1.0         =
-= Date:     2026/02/20  =
+= Date:     2026/05/28  =
 =========================
 '''
 
@@ -16,11 +16,10 @@ import ZZZ_Result_Manager.A01_cases as A01
 from Z21_Energy_Spectrum.G01_energy_spectrum import EnergySpectrum as ES
 from Z11_Dissipation_Rate.G01_dissipation_rate import DissipationRate as DS
 from Z23_Shear_Layer.G01_shear_layer import ShearLayer as SL
-from Z24_Probability_Distribution.G01_PDF_for_e2x_Kolar import PDF_for_e2x as PDF
 
-figformat = ".jpg"
+figformat = ".png"
 fig_path = getplotpath()
-result_fig = f"{fig_path}/06_PDF_theta"
+result_fig = f"{fig_path}/04_fig11_Cth_dependence"
 quickset()
 
 fig = PlotFigure(
@@ -31,7 +30,7 @@ fig = PlotFigure(
     panel_fontsize= 20,
     panel_offset=(-0.12,1.08),
     right_legend=False,     # reserve legend column
-    left=0.1,
+    left=0.07,
     right=0.98,
     bottom=0.32,
     top=0.88,
@@ -39,50 +38,78 @@ fig = PlotFigure(
     wspace=0.3
 )
 
+case_id = 2
 
 fig_id = 0
 filter = 'gaussian'
-case_id = fig_id
+Cth = 2
 for Lf_id, _ in enumerate(A01.coeffs_to_eta):
-    pdf = PDF(A01.cases_select_f[case_id], filter, Lf_id+1)
-    pdf.load_result()
-    x = pdf.PDF_x
-    y = pdf.PDF_y
+    sl = SL(A01.cases_select_w[case_id], filter, Lf_id+1)
+    sl.load_result(None,Cth)
+    eps = sl.result_json.get(0)['eps']
+    delta_s_in_mm = sl.result_json.get(0)['delta_s_in_mm']
+    Lf = sl.result_json.get(0)['Lf_in_mm']
+    nor_tmp = (eps*delta_s_in_mm/1000)**(1/3)
+    x = []
+    y = []
+    for deg in A01.degs:
+        sl.load_result(deg,Cth)
+        jump_u = sl.result_json.get(0)['jump_u']
+        x.append((deg[0][0]+deg[0][1])/2)
+        y.append(jump_u/nor_tmp)
     fig.plot(fig_id,x,y,label=A01.Lf_labels[Lf_id], color=colors[Lf_id])
 
 fig_id = 1
 filter = 'gaussian'
-case_id = fig_id
+Cth = 3
 for Lf_id, _ in enumerate(A01.coeffs_to_eta):
-    pdf = PDF(A01.cases_select_f[case_id], filter, Lf_id+1)
-    pdf.load_result()
-    x = pdf.PDF_x
-    y = pdf.PDF_y
+    sl = SL(A01.cases_select_w[case_id], filter, Lf_id+1)
+    sl.load_result(None,Cth)
+    eps = sl.result_json.get(0)['eps']
+    delta_s_in_mm = sl.result_json.get(0)['delta_s_in_mm']
+    Lf = sl.result_json.get(0)['Lf_in_mm']
+    nor_tmp = (eps*delta_s_in_mm/1000)**(1/3)
+    x = []
+    y = []
+    for deg in A01.degs:
+        sl.load_result(deg,Cth)
+        jump_u = sl.result_json.get(0)['jump_u']
+        x.append((deg[0][0]+deg[0][1])/2)
+        y.append(jump_u/nor_tmp)
     fig.plot(fig_id,x,y, color=colors[Lf_id])
 
 fig_id = 2
 filter = 'gaussian'
-case_id = fig_id
+Cth = 4
 for Lf_id, _ in enumerate(A01.coeffs_to_eta):
-    pdf = PDF(A01.cases_select_f[case_id], filter, Lf_id+1)
-    pdf.load_result()
-    x = pdf.PDF_x
-    y = pdf.PDF_y
+    sl = SL(A01.cases_select_w[case_id], filter, Lf_id+1)
+    sl.load_result(None,Cth)
+    eps = sl.result_json.get(0)['eps']
+    delta_s_in_mm = sl.result_json.get(0)['delta_s_in_mm']
+    Lf = sl.result_json.get(0)['Lf_in_mm']
+    nor_tmp = (eps*delta_s_in_mm/1000)**(1/3)
+    x = []
+    y = []
+    for deg in A01.degs:
+        sl.load_result(deg,Cth)
+        jump_u = sl.result_json.get(0)['jump_u']
+        x.append((deg[0][0]+deg[0][1])/2)
+        y.append(jump_u/nor_tmp)
     fig.plot(fig_id,x,y, color=colors[Lf_id])
 
 
 for i in range(3):
     fig.set_panel_label(i)
-    fig.set_axis(i,ylim=(0,0.01),yticks=[0,0.005,0.01])
+    fig.set_axis(i,ylim=(0,5))
     fig.set_axis(i,xlim=(0,180),xticks=[0,45,90,135,180],minor_xticks=None)
 fig.set_label(0,xlabel=r'$\theta~\mathrm{(deg)}$')
 fig.set_label(1,xlabel=r'$\theta~\mathrm{(deg)}$')
 fig.set_label(2,xlabel=r'$\theta~\mathrm{(deg)}$')
-fig.set_label(0,labelpad=15, ylabel=r'$\mathrm{p.d.f}$')
+fig.set_label(0,labelpad=15, ylabel=r'$\Delta u/(\varepsilon \delta_s)^{1/3}$')
 # ---------------------------
 # legend (ONLY in reserved column)
 # ---------------------------
-fig.add_legend_bottom_rowmajor_manual(x=0.46,y=0.04,ncol=7,xpad=0.14,handlelength=0.02,fontsize=16)
+fig.add_legend_bottom_rowmajor_manual(x=0.5,y=0.04,ncol=7,xpad=0.14,handlelength=0.02,fontsize=16)
 # ---------------------------
 # save & show
 # ---------------------------

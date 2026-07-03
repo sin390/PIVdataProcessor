@@ -28,7 +28,7 @@ fig = PlotFigure(
     figsize_unit="cm",
     right_legend=True,     # reserve legend column
     left=0.33,
-    right=0.77,
+    right=0.73,
     bottom=0.20,
     dpi=600
 )
@@ -46,7 +46,8 @@ for case_id, case in enumerate(A01.cases_select):
     x = es.wavenumber_xdir*eta
     y = es.spec_xdir[0]/(viscosity**(5/4) * eps**(1/4))
     fig.plot(fig_id,x,y, color=colors[case_id], label= A01.cases_select_labels[case_id],xlog=True,ylog=True)
-
+ax = fig.get_ax(fig_id)
+ax.axvspan(2*np.pi/80, 2*np.pi/20, alpha=0.2, color='gray')
 
 model_x = np.array([1e-2,1e0])/eta
 model_y = 0.49*eps**(2/3)*model_x**(-5/3)
@@ -59,7 +60,8 @@ line.set_dashes([6,3])
 # ---------------------------
 # legend (ONLY in reserved column)
 # ---------------------------
-fig.add_legend_inside(loc="upper right",handlelength=1.5,fontsize=16)
+# fig.add_legend_inside(loc="upper right",handlelength=1.5,fontsize=16)
+fig.legend(bbox_to_anchor=(-0.8,0.5))
 fig.set_label(0,ylabel=r'$E_u(\nu ^5 \varepsilon)^{-1/4}$')
 fig.set_label(0,xlabel=r'$k_x\eta$')
 

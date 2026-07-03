@@ -2,7 +2,7 @@
 =========================
 = Author:   HAN Zexu    =
 = Version:  1.0         =
-= Date:     2026/02/20  =
+= Date:     2026/05/28  =
 =========================
 '''
 
@@ -20,7 +20,7 @@ from Z24_Probability_Distribution.G01_PDF_for_e2x_Kolar import PDF_for_e2x as PD
 
 figformat = ".jpg"
 fig_path = getplotpath()
-result_fig = f"{fig_path}/06_PDF_theta"
+result_fig = f"{fig_path}/02_fig9a_Cth_dependence"
 quickset()
 
 fig = PlotFigure(
@@ -39,36 +39,38 @@ fig = PlotFigure(
     wspace=0.3
 )
 
+case_id = 2
 
 fig_id = 0
 filter = 'gaussian'
-case_id = fig_id
+cth = 2
 for Lf_id, _ in enumerate(A01.coeffs_to_eta):
-    pdf = PDF(A01.cases_select_f[case_id], filter, Lf_id+1)
-    pdf.load_result()
+    pdf = PDF(A01.cases_select_w[case_id], filter, Lf_id+1)
+    pdf.load_result(coef_threshold=cth)
     x = pdf.PDF_x
     y = pdf.PDF_y
     fig.plot(fig_id,x,y,label=A01.Lf_labels[Lf_id], color=colors[Lf_id])
 
 fig_id = 1
 filter = 'gaussian'
-case_id = fig_id
+cth = 3
 for Lf_id, _ in enumerate(A01.coeffs_to_eta):
-    pdf = PDF(A01.cases_select_f[case_id], filter, Lf_id+1)
-    pdf.load_result()
+    pdf = PDF(A01.cases_select_w[case_id], filter, Lf_id+1)
+    pdf.load_result(coef_threshold=cth)
     x = pdf.PDF_x
     y = pdf.PDF_y
-    fig.plot(fig_id,x,y, color=colors[Lf_id])
+    fig.plot(fig_id,x,y,color=colors[Lf_id])
+
 
 fig_id = 2
 filter = 'gaussian'
-case_id = fig_id
+cth = 4
 for Lf_id, _ in enumerate(A01.coeffs_to_eta):
-    pdf = PDF(A01.cases_select_f[case_id], filter, Lf_id+1)
-    pdf.load_result()
+    pdf = PDF(A01.cases_select_w[case_id], filter, Lf_id+1)
+    pdf.load_result(coef_threshold=cth)
     x = pdf.PDF_x
     y = pdf.PDF_y
-    fig.plot(fig_id,x,y, color=colors[Lf_id])
+    fig.plot(fig_id,x,y,color=colors[Lf_id])
 
 
 for i in range(3):
@@ -82,7 +84,7 @@ fig.set_label(0,labelpad=15, ylabel=r'$\mathrm{p.d.f}$')
 # ---------------------------
 # legend (ONLY in reserved column)
 # ---------------------------
-fig.add_legend_bottom_rowmajor_manual(x=0.46,y=0.04,ncol=7,xpad=0.14,handlelength=0.02,fontsize=16)
+fig.add_legend_bottom_rowmajor_manual(x=0.5,y=0.04,ncol=7,xpad=0.14,handlelength=0.02,fontsize=16)
 # ---------------------------
 # save & show
 # ---------------------------

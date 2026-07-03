@@ -117,6 +117,8 @@ class PlotFigure:
         self._ci = 0
         self._mi = 0
 
+    def get_ax(self, index:int):
+        return self._ax(index)
     # -------------------------
     # internal helpers
     # -------------------------
@@ -426,7 +428,7 @@ class PlotFigure:
             self.ax_legend.cla()
             self.ax_legend.axis("off")
 
-            self.ax_legend.legend(
+            return self.ax_legend.legend(
                 self.legend_handles,
                 self.legend_labels,
                 loc=loc,
@@ -450,61 +452,65 @@ class PlotFigure:
                 )
 
     def add_legend_bottom_rowmajor_manual(
-        self,
-        *,
-        ncol=4,
-        x=0.5,
-        y=0.03,
-        xpad=0.06,
-        ypad=0.05,
-        handlelength=0.04,
-        textpad=0.01,
-        linewidth=1.5,
-        fontsize=9,
-    ):
-        """
-        Manually draw a row-major legend with global (x, y) anchor
-        in figure coordinates.
-        """
-        handles = self.legend_handles
-        labels  = self.legend_labels
-        n = len(handles)
-        if n == 0:
-            return
+            self,
+            *,
+            ncol=4,
+            x=0.5,
+            y=0.03,
+            xpad=0.06,
+            ypad=0.05,
+            handlelength=0.04,
+            textpad=0.01,
+            linewidth=1.5,
+            fontsize=9,
+        ):
+            handles = self.legend_handles
+            labels  = self.legend_labels
+            n = len(handles)
+            if n == 0:
+                return
+            fig = self.fig
+            x0 = x - (ncol - 1) * xpad / 2
+            y0 = y
+            for i, (h, lab) in enumerate(zip(handles, labels)):
+                r = i // ncol
+                c = i % ncol
+                xx = x0 + c * xpad
+                yy = y0 - r * ypad
 
-        fig = self.fig
+                # 提取 marker 属性
+                marker    = h.get_marker()
+                mfc       = h.get_markerfacecolor()
+                mec       = h.get_markeredgecolor()
+                mew       = h.get_markeredgewidth()
+                ms        = h.get_markersize()
 
-        # 以 (x, y) 为“第一行中心”
-        x0 = x - (ncol - 1) * xpad / 2
-        y0 = y
-
-        for i, (h, lab) in enumerate(zip(handles, labels)):
-            r = i // ncol   # 行优先
-            c = i % ncol
-
-            xx = x0 + c * xpad
-            yy = y0 - r * ypad
-
-            # legend 线段
-            fig.lines.append(
-                h.__class__(
-                    [xx - handlelength, xx],
-                    [yy, yy],
-                    transform=fig.transFigure,
-                    color=h.get_color(),
-                    linestyle=h.get_linestyle(),
-                    linewidth=linewidth
+                # legend 线段（中点放 marker）
+                fig.lines.append(
+                    h.__class__(
+                        [xx - handlelength, xx - handlelength/2, xx],
+                        [yy, yy, yy],
+                        transform=fig.transFigure,
+                        color=h.get_color(),
+                        linestyle=h.get_linestyle(),
+                        linewidth=linewidth,
+                        marker=marker,
+                        markerfacecolor=mfc,
+                        markeredgecolor=mec,
+                        markeredgewidth=mew,
+                        markersize=ms,
+                        markevery=[1],   # 索引1 = 中点
+                    )
                 )
-            )
-
-            # legend 文本
-            fig.text(
-                xx + textpad, yy,
-                lab,
-                ha="left",
-                va="center",
-                fontsize=fontsize
-            )
+                # legend 文本
+                fig.text(
+                    xx + textpad, yy,
+                    lab,
+                    ha="left",
+                    va="center",
+                    fontsize=fontsize,
+                    transform=fig.transFigure,
+                )
 
     # -------------------------
     # save/show (STRICT SIZE)
