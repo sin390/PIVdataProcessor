@@ -9,7 +9,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from Q01_Plot.L01_piv_plot import PlotFigure 
-from Q01_Plot.C00_cfg_for_cases import colors, linewidths
+from Q01_Plot.C00_cfg_for_cases import colors, linewidths, markers, linestyles, markersizes
 from Q01_Plot.L00_tools import rm_and_create_directory, quickset, getplotpath
 
 import ZZZ_Result_Manager.A01_cases as A01
@@ -29,8 +29,8 @@ fig = PlotFigure(
     panel_fontsize= 20,
     panel_offset=(-0.16,1.06),
     right_legend=True,     # reserve legend column
-    left=0.3,
-    right=0.7,
+    left=0.33,
+    right=0.73,
     bottom=0.18,
     top=0.85,
     wspace=0.6,
@@ -63,14 +63,14 @@ for case_id, case in enumerate(A01.cases[:-1]):
         value_sub2 = dr.result_json.get(0)['urms']/dr.result_json.get(0)['vrms']
         yerr.append(np.abs(value_sub1-value_sub2)/2)
         
-    fig.plot(fig_id,x,y,marker='^',label=A01.case_labels[case_id],markersize = 4,ifmarker=True, color=colors[case_id],
-             yerr=yerr,capsize=5)
+    fig.plot(fig_id,x,y,marker=markers[case_id],label=A01.case_labels[case_id],markersize = markersizes[case_id],ifmarker=True, color=colors[case_id],
+             yerr=yerr,capsize=5,capthick=0.5, markerfacecolor='none')
 
 
 fig.set_axis(0,xlim=(0,0.4),ylim=(0,2.5))
-fig.set_label(0,xlabel=r'$L_f/L_{u_1}$')
+fig.set_label(0,xlabel=r'$L_F/L_{u}$')
 fig.set_label(0,
-              ylabel=r'$\widetilde u_{1,\mathrm{rms}}/ \widetilde u_{2,\mathrm{rms}}$',
+              ylabel=r'$\tilde u_{\mathrm{rms}}/ \tilde v_{\mathrm{rms}}$',
               labelpad= 15)
 # ---------------------------
 # legend (ONLY in reserved column)

@@ -55,14 +55,3 @@ for case_id, case in enumerate(cases[:-1]):
     rm.result_table.set(result_id, resolution_to_Lambda = 2*dx/Lambda[case_id])
     rm.result_table.set(result_id, resolution_to_eta = 2*dx/eta[case_id])
 
-# rm = RM(cases[-1])
-# rm.result_table.set(result_id, urms = 12.9, vrms = 11.2, kt = (12.9**2 + 11.2**2+ 11.2**2)/2)
-# rm.result_table.set(result_id, Re_lambda = 600, Lambda = 0.85e-3)
-# rm.result_table.set(result_id, L11 = 26e-3, L22 = 21e-3, ratio_L11_L22 = 26/21)
-# rm.result_table.set(result_id, dissipationRate = 4.3e4, eta = 1.8e-5, kinetic_viscosity=1.6e-5)
-# pBase.load_case(cases[-1])
-# pBase.base_load_data_all(0,0)
-# dx = (pBase.X[0][1,0]-pBase.X[0][0,0])/1000
-# rm.result_table.set(result_id, resolution = 2*dx)
-# rm.result_table.set(result_id, resolution_to_Lambda = 2*dx/0.85e-3)
-# rm.result_table.set(result_id, resolution_to_eta = 2*dx/1.8e-5)

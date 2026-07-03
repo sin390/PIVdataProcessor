@@ -15,6 +15,17 @@ from Q01_Plot.L00_tools import rm_and_create_directory, quickset, getplotpath
 import ZZZ_Result_Manager.A01_cases as A01
 from Z23_Shear_Layer.G01_shear_layer import ShearLayer as SL
 
+linestyles = [
+    '-',
+    (6, (19, 3)),                  # 长破线，24
+    (3.5, (14, 3, 2, 3)),            # 一点划线，24
+    (3, (11, 3, 2, 3, 2, 3)),       
+    '-',
+    (6, (19, 3)),                  # 长破线，24
+    (3.5, (14, 3, 2, 3)),           # 一点划线，24
+    (3, (11, 3, 2, 3, 2, 3)),  
+]
+
 figformat = ".jpg"
 fig_path = getplotpath()
 result_fig = f"{fig_path}/10_Ar_angle"
@@ -62,8 +73,8 @@ for case_id, case in enumerate(A01.cases[:-1]):
         sl.load_result(deg)        
         value_sub2 = sl.result_json.get(0)['AR']
         yerr.append(np.abs(value_sub1-value_sub2)/2)
-    fig.plot(fig_id,x,y,label=A01.case_labels[case_id], color=colors[case_id],
-            yerr=yerr,capsize=4,capthick=0.8,elinewidth=0.8)
+    fig.plot(fig_id,x,y,label=A01.case_labels[case_id], color=colors[case_id],linestyle = linestyles[case_id],
+            yerr=yerr,elinewidth=0.5)
 print(A01.Lf_label[filter_id-1])
 
 fig_id = 1
@@ -88,7 +99,7 @@ for case_id, case in enumerate(A01.cases[:-1]):
         sl.load_result(deg)        
         value_sub2 = sl.result_json.get(0)['AR']
         yerr.append(np.abs(value_sub1-value_sub2)/2)
-    fig.plot(fig_id,x,y,color=colors[case_id], yerr=yerr, capsize=4,capthick=0.8,elinewidth=0.8)
+    fig.plot(fig_id,x,y,color=colors[case_id], yerr=yerr, elinewidth=0.5,linestyle = linestyles[case_id])
 print(A01.Lf_label[filter_id-1])
 
 fig_id = 2
@@ -113,23 +124,29 @@ for case_id, case in enumerate(A01.cases[:-1]):
         sl.load_result(deg)        
         value_sub2 = sl.result_json.get(0)['AR']
         yerr.append(np.abs(value_sub1-value_sub2)/2) 
-    fig.plot(fig_id,x,y,color=colors[case_id], yerr=yerr, capsize=4,capthick=0.8,elinewidth=0.8)
+    fig.plot(fig_id,x,y,color=colors[case_id], yerr=yerr, elinewidth=0.5,linestyle = linestyles[case_id])
 print(A01.Lf_label[filter_id-1])
 
 
 for i in range(3):
     fig.set_panel_label(i)
-    fig.set_axis(i,ylim=(0,8))
+    fig.set_axis(i,ylim=(3,8))
     fig.set_axis(i,xlim=(0,180),xticks=[0,45,90,135,180],minor_xticks=None)
-fig.set_label(0,xlabel=r'$\theta~\mathrm{(deg)}$')
-fig.set_label(1,xlabel=r'$\theta~\mathrm{(deg)}$')
-fig.set_label(2,xlabel=r'$\theta~\mathrm{(deg)}$')
+fig.set_label(0,xlabel=r'$\theta~\mathrm{(deg.)}$')
+fig.set_label(1,xlabel=r'$\theta~\mathrm{(deg.)}$')
+fig.set_label(2,xlabel=r'$\theta~\mathrm{(deg.)}$')
 fig.set_label(0,labelpad=15, ylabel=r'$A_R$')
 # ---------------------------
 # legend (ONLY in reserved column)
 # ---------------------------
 # fig.legend(bbox_to_anchor=(-1.8, 0.5), handlelength= 1.5)
-fig.add_legend_bottom_rowmajor_manual(x=0.53,y=0.04,ncol=7,xpad=0.14,handlelength=0.02,fontsize=16)
+fig.legend_bottom(
+    ncol=7,
+    y=0.05,
+    fontsize=16,
+    columnspacing=1.4,
+    handlelength=2.2,
+)
 # ---------------------------
 # save & show
 # ---------------------------

@@ -21,6 +21,17 @@ fig_path = getplotpath()
 result_fig = f"{fig_path}/07_PDF_theta"
 quickset()
 
+linestyles = [
+    '-',
+    (6, (19, 3)),                  # 长破线，24
+    (3.5, (14, 3, 2, 3)),            # 一点划线，24
+    (3, (11, 3, 2, 3, 2, 3)),       
+    '-',
+    (6, (19, 3)),                  # 长破线，24
+    (3.5, (14, 3, 2, 3)),           # 一点划线，24
+    (3, (11, 3, 2, 3, 2, 3)),  
+]
+
 fig = PlotFigure(
     nrows=1,
     ncols=3,
@@ -46,7 +57,7 @@ for case_id, case in enumerate(A01.cases[:-1]):
     pdf.load_result()
     x = pdf.PDF_x
     y = pdf.PDF_y
-    fig.plot(fig_id,x,y,label=A01.case_labels[case_id], color=colors[case_id])
+    fig.plot(fig_id,x,y,label=A01.case_labels[case_id], color=colors[case_id],linestyle = linestyles[case_id])
 print(A01.Lf_label[filter_id-1])
 
 fig_id = 1
@@ -56,7 +67,7 @@ for case_id, case in enumerate(A01.cases[:-1]):
     pdf.load_result()
     x = pdf.PDF_x
     y = pdf.PDF_y
-    fig.plot(fig_id,x,y, color=colors[case_id])
+    fig.plot(fig_id,x,y, color=colors[case_id],linestyle = linestyles[case_id])
 print(A01.Lf_label[filter_id-1])
 
 fig_id = 2
@@ -66,21 +77,28 @@ for case_id, case in enumerate(A01.cases[:-1]):
     pdf.load_result()
     x = pdf.PDF_x
     y = pdf.PDF_y
-    fig.plot(fig_id,x,y, color=colors[case_id])
+    fig.plot(fig_id,x,y, color=colors[case_id],linestyle = linestyles[case_id])
 print(A01.Lf_label[filter_id-1])
 
 for i in range(3):
     fig.set_panel_label(i)
-    fig.set_axis(i,ylim=(0,0.01),yticks=[0,0.005,0.01])
+    fig.set_axis(i,ylim=(0.003,0.008))
     fig.set_axis(i,xlim=(0,180),xticks=[0,45,90,135,180],minor_xticks=None)
-fig.set_label(0,xlabel=r'$\theta~\mathrm{(deg)}$')
-fig.set_label(1,xlabel=r'$\theta~\mathrm{(deg)}$')
-fig.set_label(2,xlabel=r'$\theta~\mathrm{(deg)}$')
-fig.set_label(0,labelpad=15, ylabel=r'$\mathrm{p.d.f}$')
+fig.set_label(0,xlabel=r'$\theta~\mathrm{(deg.)}$')
+fig.set_label(1,xlabel=r'$\theta~\mathrm{(deg.)}$')
+fig.set_label(2,xlabel=r'$\theta~\mathrm{(deg.)}$')
+fig.set_label(0,labelpad=15, ylabel=r'$\mathrm{PDF}$')
 # ---------------------------
 # legend (ONLY in reserved column)
 # ---------------------------
-fig.add_legend_bottom_rowmajor_manual(x=0.53,y=0.04,ncol=7,xpad=0.14,handlelength=0.02,fontsize=16)
+# fig.add_legend_bottom_rowmajor_manual(x=0.53,y=0.04,ncol=7,xpad=0.16,handlelength=0.06,fontsize=16)
+fig.legend_bottom(
+    ncol=7,
+    y=0.05,
+    fontsize=16,
+    columnspacing=1.4,
+    handlelength=2.2,
+)
 # ---------------------------
 # save & show
 # ---------------------------

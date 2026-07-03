@@ -119,6 +119,7 @@ class ShearLayer(GT):
         np.save(result_path+'/avg_omega_s_BRF.npy',avg_omega_s_BRF)
         np.save(result_path+'/avg_omega_r_BRF.npy',avg_omega_r_BRF)
         '.'
+        self.result_json.set(0,identified_LSL_number = identified_LSL_number)
         self.load_result(deg_ranges)
 
     def load_result(self, deg_ranges=None, Cth = 1.5):
@@ -152,15 +153,16 @@ def worker(args):
     sl.calculate_general(deg_ranges, Cth)
     return print (f'Finished:{args}')
 if __name__ == '__main__':
-    from ZZZ_Result_Manager.A01_cases import cases, gaussian_id, degs
+    from ZZZ_Result_Manager.A01_cases import cases, gaussian_id, degs, cases_appendix
     from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
     from multiprocessing import Pool  
 
     filter = 'gaussian'
     filter_params = gaussian_id
     Cth=1.5
+    # cases=cases_appendix
+
     deg_ranges = None
-    cases = cases[:-1]
     with Pool() as pool:
         tasks = []
         for case_id, case in enumerate(cases):
@@ -170,14 +172,12 @@ if __name__ == '__main__':
                 tasks.append((case, filter, filter_param, Lf, deg_ranges,Cth))
         results = pool.map(worker, tasks)  
 
-    # deg_ranges = None
-    # deg_ranges = ((90-15,90+15),)
-    for deg in degs:
-        with Pool() as pool:
-            tasks = []
-            for case_id, case in enumerate(cases):
-                for filter_id, filter_param in enumerate(filter_params):
-                    rm = RM(case)
-                    Lf = rm.result_table.get(2)['Lfs'][filter_id]
-                    tasks.append((case, filter, filter_param, Lf, deg,Cth))
-            results = pool.map(worker, tasks)  
+    # for deg in degs:
+    #     with Pool() as pool:
+    #         tasks = []
+    #         for case_id, case in enumerate(cases):
+    #             for filter_id, filter_param in enumerate(filter_params):
+    #                 rm = RM(case)
+    #                 Lf = rm.result_table.get(2)['Lfs'][filter_id]
+    #                 tasks.append((case, filter, filter_param, Lf, deg,Cth))
+    #         results = pool.map(worker, tasks)  
