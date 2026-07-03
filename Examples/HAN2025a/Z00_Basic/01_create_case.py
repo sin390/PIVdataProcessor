@@ -8,4 +8,4 @@
 
 from pivdataprocessor.L01_base import PIVDataProcessorBase as pBase 
 
-pBase.create_case('Mori_465',80,50)
+pBase.create_case('Case_FanW_All100',159,99)

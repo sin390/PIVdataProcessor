@@ -1,4 +1,3 @@
-
 import numpy as np
 from pivdataprocessor.L01_base import PIVDataProcessorBase as pBase
 from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
@@ -15,3 +14,4 @@ for case_id, case in enumerate(cases[:-1]):
     eta = rm.result_table.get(1)['eta']*1000
     rm.result_table.set(result_id, Lfs=list(Lf))
     # print(f'{case_labels[case_id]}:{Lf/dx}')
+

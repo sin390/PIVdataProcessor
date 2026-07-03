@@ -16,22 +16,24 @@ import ZZZ_Result_Manager.A01_cases as A01
 from Z23_Shear_Layer.G01_shear_layer import ShearLayer as SL
 from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
 
+linestyles = [
+    '-',
+    (5.5, (19, 3)),                  # 长破线，24
+    (3, (14, 3, 2, 3)),            # 一点划线，24
+    (1, (11, 3, 2, 3, 2, 3)),       
+    '-',
+    (4, (19, 3)),                  # 长破线，24
+    (1.5, (14, 3, 2, 3)),           # 一点划线，24
+    (1, (11, 3, 2, 3, 2, 3)),  
+]
+
 figformat = ".jpg"
 fig_path = getplotpath()
 result_fig = f"{fig_path}/09_delta_u_angle"
 quickset()
 
-linestyles = [
-    '-',
-    (6, (19, 3)),                  # 长破线，24
-    (3.5, (14, 3, 2, 3)),            # 一点划线，24
-    (3, (11, 3, 2, 3, 2, 3)),       
-    '-',
-    (6, (19, 3)),                  # 长破线，24
-    (3.5, (14, 3, 2, 3)),           # 一点划线，24
-    (3, (11, 3, 2, 3, 2, 3)),  
-]
-
+cases = A01.cases_appendix
+case_labels = A01.case_appendix_labels
 
 fig = PlotFigure(
     nrows=1,
@@ -49,13 +51,13 @@ fig = PlotFigure(
     wspace=0.3
 )
 
-cases_sub1 = [case + '_even' for case in A01.cases]
-cases_sub2 = [case + '_odd' for case in A01.cases]
+cases_sub1 = [case + '_even' for case in cases]
+cases_sub2 = [case + '_odd' for case in cases]
 
 fig_id = 0
 filter = 'gaussian'
 filter_id = 1
-for case_id, case in enumerate(A01.cases[:-1]):
+for case_id, case in enumerate(cases):
     sl = SL(case, filter, filter_id)
     sl.load_result()
     rm = RM(case)
@@ -84,15 +86,16 @@ for case_id, case in enumerate(A01.cases[:-1]):
         value_sub2 = jump_u/nor_tmp
         yerr.append(np.abs(value_sub1-value_sub2)/2)
 
-    fig.plot(fig_id,x,y,label=A01.case_labels[case_id], color=colors[case_id], linestyle=linestyles[case_id],
+    fig.plot(fig_id,x,y,label=case_labels[case_id], color=colors[case_id],linestyle = linestyles[case_id],
             yerr=yerr,elinewidth=0.5)
+    # )
 
 print(A01.Lf_label[filter_id-1])
 
 fig_id = 1
 filter = 'gaussian'
 filter_id = 5
-for case_id, case in enumerate(A01.cases[:-1]):
+for case_id, case in enumerate(cases):
     sl = SL(case, filter, filter_id)
     sl.load_result()
     rm = RM(case)
@@ -119,14 +122,15 @@ for case_id, case in enumerate(A01.cases[:-1]):
         jump_u = sl.result_json.get(0)['jump_u']
         value_sub2 = jump_u/nor_tmp
         yerr.append(np.abs(value_sub1-value_sub2)/2)
-    fig.plot(fig_id,x,y,color=colors[case_id],linestyle=linestyles[case_id],
+    fig.plot(fig_id,x,y,color=colors[case_id],linestyle = linestyles[case_id],
              yerr=yerr,elinewidth=0.5)
+    # )
 print(A01.Lf_label[filter_id-1])
 
 fig_id = 2
 filter = 'gaussian'
 filter_id = 9
-for case_id, case in enumerate(A01.cases[:-1]):
+for case_id, case in enumerate(cases):
     sl = SL(case, filter, filter_id)
     sl.load_result()
     rm = RM(case)
@@ -151,8 +155,9 @@ for case_id, case in enumerate(A01.cases[:-1]):
         jump_u = sl.result_json.get(0)['jump_u']
         value_sub2 = jump_u/nor_tmp
         yerr.append(np.abs(value_sub1-value_sub2)/2)
-    fig.plot(fig_id,x,y,color=colors[case_id], linestyle=linestyles[case_id],
+    fig.plot(fig_id,x,y,color=colors[case_id],linestyle = linestyles[case_id],
              yerr=yerr,elinewidth=0.5)
+    # )
 print(A01.Lf_label[filter_id-1])
 
 for i in range(3):

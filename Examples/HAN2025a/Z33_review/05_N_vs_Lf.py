@@ -2,7 +2,7 @@
 =========================
 = Author:   HAN Zexu    =
 = Version:  1.0         =
-= Date:     2026/02/20  =
+= Date:     2026/05/28  =
 =========================
 '''
 
@@ -18,7 +18,7 @@ from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
 
 figformat = ".jpg"
 fig_path = getplotpath()
-result_fig = f"{fig_path}/08_Ar_Lf"
+result_fig = f"{fig_path}/05_N_vs_Lf"
 quickset()
 
 fig = PlotFigure(
@@ -29,16 +29,13 @@ fig = PlotFigure(
     panel_fontsize= 20,
     panel_offset=(-0.16,1.06),
     right_legend=True,     # reserve legend column
-    left=0.3,
-    right=0.7,
+    left=0.33,
+    right=0.73,
     bottom=0.18,
     top=0.85,
     wspace=0.6,
     dpi=600
 )
-
-cases_sub1 = [case + '_even' for case in A01.cases]
-cases_sub2 = [case + '_odd' for case in A01.cases]
 
 fig_id = 0
 for case_id, case in enumerate(A01.cases[:-1]):
@@ -46,40 +43,30 @@ for case_id, case in enumerate(A01.cases[:-1]):
     y=[]
     rm = RM(case) 
     L11 = rm.result_table.get(1)['L11']
-    yerr=[]
-    for filter_id, filter_param in enumerate(A01.gaussian_id):       
+    for filter_id, filter_param in enumerate(A01.gaussian_id):
         sl = SL(A01.cases[case_id],'gaussian',filter_param)
         sl.load_result(None)
         eta = sl.result_json.get(0)['eta']
         Lf = sl.result_json.get(0)['Lf_in_mm']/1000
-        Ar = sl.result_json.get(0)['AR']
-        delta_s_in_m = sl.result_json.get(0)['delta_s_in_mm']/1000
-        x.append(delta_s_in_m/L11)
-        y.append(Ar)
+        N_layer = sl.result_json.get(0)['identified_LSL_number']
+        x.append(Lf/L11)
+        y.append(N_layer)
 
-        sl = SL(cases_sub1[case_id],'gaussian',filter_param)
-        sl.load_result(None)
-        value_sub1 = sl.result_json.get(0)['AR']
-        sl = SL(cases_sub2[case_id],'gaussian',filter_param)
-        sl.load_result(None)
-        value_sub2 = sl.result_json.get(0)['AR']
-        yerr.append(np.abs(value_sub1-value_sub2)/2)
+    fig.plot(fig_id,x,y,label=A01.case_labels[case_id], color=colors[case_id],marker=markers[case_id],markersize = markersizes[case_id],ifmarker=True,
+             markerfacecolor='none')
 
-    fig.plot(fig_id,x,y,label=A01.case_labels[case_id], color=colors[case_id], marker=markers[case_id],markersize = markersizes[case_id],ifmarker=True,
-            yerr=yerr,capsize=2.5,elinewidth=0.5,capthick=0.5,markerfacecolor='none')
 
-fig.set_axis(0,xlim=(0.06,0.22),ylim=(3,7))
+fig.set_axis(0,xlim=(0,0.4),ylim=(1e4,1e6),ylog=True)
+# fig.set_axis(0,xlim=(0,90),ylim=(0.8e4,1e6),ylog=True)
 # fig.set_axis(1,xlim=(10,40),ylim=(0,3))
 
-fig.set_label(0,xlabel=r'$\delta_S/L_{u}$')
-fig.set_label(0,ylabel=r'$A_R$',labelpad= 15)
+fig.set_label(0,xlabel=r'$L_F/L_u$')
+fig.set_label(0,ylabel=r'$N_{S}$',labelpad= 15)
 # ---------------------------
 # legend (ONLY in reserved column)
 # ---------------------------
-# fig.legend(bbox_to_anchor=(-2.2, 0.5), handlelength= 1.5, fontsize=16)
-fig.legend(bbox_to_anchor=(-2.2, 0.5), handlelength= 1.8, fontsize=16)
-# fig.add_legend_bottom_rowmajor_manual(x=0.56,y=0.04,ncol=7,xpad=0.14,handlelength=0.02,fontsize=16)
+fig.legend(bbox_to_anchor=(-2, 0.5), handlelength= 1.5, fontsize=16)
 # ---------------------------
 # save & show
 # ---------------------------
-fig.save(result_fig + figformat)
+fig.save(result_fig + figformat)    

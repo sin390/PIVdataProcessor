@@ -16,21 +16,24 @@ import ZZZ_Result_Manager.A01_cases as A01
 from Z23_Shear_Layer.G01_shear_layer import ShearLayer as SL
 from Z22_Probability_Distribution.G01_PDF_for_e2x_Kolar import PDF_for_e2x as PDF
 
+linestyles = [
+    '-',
+    (5.5, (19, 3)),                  # 长破线，24
+    (3, (14, 3, 2, 3)),            # 一点划线，24
+    (1, (11, 3, 2, 3, 2, 3)),       
+    '-',
+    (4, (19, 3)),                  # 长破线，24
+    (1.5, (14, 3, 2, 3)),           # 一点划线，24
+    (1, (11, 3, 2, 3, 2, 3)),  
+]
+
 figformat = ".png"
 fig_path = getplotpath()
 result_fig = f"{fig_path}/07_PDF_theta"
 quickset()
 
-linestyles = [
-    '-',
-    (6, (19, 3)),                  # 长破线，24
-    (3.5, (14, 3, 2, 3)),            # 一点划线，24
-    (3, (11, 3, 2, 3, 2, 3)),       
-    '-',
-    (6, (19, 3)),                  # 长破线，24
-    (3.5, (14, 3, 2, 3)),           # 一点划线，24
-    (3, (11, 3, 2, 3, 2, 3)),  
-]
+cases =  A01.cases_appendix
+case_labels = A01.case_appendix_labels
 
 fig = PlotFigure(
     nrows=1,
@@ -52,32 +55,32 @@ fig = PlotFigure(
 fig_id = 0
 filter = 'gaussian'
 filter_id = 1
-for case_id, case in enumerate(A01.cases[:-1]):
-    pdf = PDF(A01.cases[case_id], filter, filter_id)
+for case_id, case in enumerate(cases):
+    pdf = PDF(cases[case_id], filter, filter_id)
     pdf.load_result()
     x = pdf.PDF_x
     y = pdf.PDF_y
-    fig.plot(fig_id,x,y,label=A01.case_labels[case_id], color=colors[case_id],linestyle = linestyles[case_id])
+    fig.plot(fig_id,x,y,label=case_labels[case_id], color=colors[case_id], linestyle = linestyles[case_id])
 print(A01.Lf_label[filter_id-1])
 
 fig_id = 1
 filter_id = 5
-for case_id, case in enumerate(A01.cases[:-1]):
-    pdf = PDF(A01.cases[case_id], filter, filter_id)
+for case_id, case in enumerate(cases):
+    pdf = PDF(cases[case_id], filter, filter_id)
     pdf.load_result()
     x = pdf.PDF_x
     y = pdf.PDF_y
-    fig.plot(fig_id,x,y, color=colors[case_id],linestyle = linestyles[case_id])
+    fig.plot(fig_id,x,y, color=colors[case_id], linestyle = linestyles[case_id])
 print(A01.Lf_label[filter_id-1])
 
 fig_id = 2
 filter_id = 9
-for case_id, case in enumerate(A01.cases[:-1]):
-    pdf = PDF(A01.cases[case_id], filter, filter_id)
+for case_id, case in enumerate(cases):
+    pdf = PDF(cases[case_id], filter, filter_id)
     pdf.load_result()
     x = pdf.PDF_x
     y = pdf.PDF_y
-    fig.plot(fig_id,x,y, color=colors[case_id],linestyle = linestyles[case_id])
+    fig.plot(fig_id,x,y, color=colors[case_id], linestyle = linestyles[case_id])
 print(A01.Lf_label[filter_id-1])
 
 for i in range(3):
@@ -91,7 +94,6 @@ fig.set_label(0,labelpad=15, ylabel=r'$\mathrm{PDF}$')
 # ---------------------------
 # legend (ONLY in reserved column)
 # ---------------------------
-# fig.add_legend_bottom_rowmajor_manual(x=0.53,y=0.04,ncol=7,xpad=0.16,handlelength=0.06,fontsize=16)
 fig.legend_bottom(
     ncol=7,
     y=0.05,

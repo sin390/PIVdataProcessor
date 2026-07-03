@@ -37,6 +37,10 @@ fig = PlotFigure(
     dpi=600
 )
 
+# Lf = 80,70,60 eta
+MFC_all100_x = [80,70,60] 
+MFC_all100_y = [4.434957e+00,4.274824e+00,4.220420e+00]
+
 cases_sub1 = [case + '_even' for case in A01.cases]
 cases_sub2 = [case + '_odd' for case in A01.cases]
 
@@ -54,24 +58,19 @@ for case_id, case in enumerate(A01.cases[:-1]):
         Lf = sl.result_json.get(0)['Lf_in_mm']/1000
         Ar = sl.result_json.get(0)['AR']
         delta_s_in_m = sl.result_json.get(0)['delta_s_in_mm']/1000
-        x.append(delta_s_in_m/L11)
+        x.append(delta_s_in_m/eta)
         y.append(Ar)
 
-        sl = SL(cases_sub1[case_id],'gaussian',filter_param)
-        sl.load_result(None)
-        value_sub1 = sl.result_json.get(0)['AR']
-        sl = SL(cases_sub2[case_id],'gaussian',filter_param)
-        sl.load_result(None)
-        value_sub2 = sl.result_json.get(0)['AR']
-        yerr.append(np.abs(value_sub1-value_sub2)/2)
+
 
     fig.plot(fig_id,x,y,label=A01.case_labels[case_id], color=colors[case_id], marker=markers[case_id],markersize = markersizes[case_id],ifmarker=True,
-            yerr=yerr,capsize=2.5,elinewidth=0.5,capthick=0.5,markerfacecolor='none')
+            capsize=2.5,elinewidth=0.5,capthick=0.5,markerfacecolor='none')
+fig.plot(fig_id,MFC_all100_x,MFC_all100_y, color='k',label='Han et al.', linestyle = 'None',
+        marker=markers[case_id],markersize = markersizes[case_id],ifmarker=True,capsize=5,capthick=0.5,)
 
-fig.set_axis(0,xlim=(0.06,0.22),ylim=(3,7))
-# fig.set_axis(1,xlim=(10,40),ylim=(0,3))
+fig.set_axis(0,xlim=(10,1000),ylim=(3,7),xlog=True)
 
-fig.set_label(0,xlabel=r'$\delta_S/L_{u}$')
+fig.set_label(0,xlabel=r'$\delta_S/\eta$')
 fig.set_label(0,ylabel=r'$A_R$',labelpad= 15)
 # ---------------------------
 # legend (ONLY in reserved column)

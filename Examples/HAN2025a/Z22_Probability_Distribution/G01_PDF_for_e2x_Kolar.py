@@ -72,7 +72,7 @@ def worker(args):
     return pdf.calculate(bins=bins,hist_range=hist_range)
 
 if __name__ == '__main__':
-    from ZZZ_Result_Manager.A01_cases import cases, degs, gaussian_id
+    from ZZZ_Result_Manager.A01_cases import cases, degs, gaussian_id, cases_appendix
     from multiprocessing import Pool 
 
     d_deg = 10
@@ -84,6 +84,7 @@ if __name__ == '__main__':
         print(f'filter : {filter_param}')
         tasks = []
         with Pool() as pool:
-            for case in cases:
+            # for case in cases:
+            for case in cases_appendix:
                 tasks.append((case, 'gaussian', filter_param, bins, deg_range))
             results = pool.map(worker, tasks)   

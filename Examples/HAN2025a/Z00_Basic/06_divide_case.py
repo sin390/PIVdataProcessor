@@ -94,6 +94,7 @@ def divide_case_by_odd_even_full(case: str):
         pBase.preprocess_data(sub_case)
 
 
-from ZZZ_Result_Manager.A01_cases import cases
-for case in cases[:-1]:
+from ZZZ_Result_Manager.A01_cases import cases,cases_appendix
+# for case in cases[:-1]:
+for case in cases_appendix:
     divide_case_by_odd_even_full(case)

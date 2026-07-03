@@ -312,9 +312,9 @@ class TripleDecomposition(GH):
 
 
 
-from ZZZ_Result_Manager.A01_cases import cases, gaussian_id
+from ZZZ_Result_Manager.A01_cases import cases, gaussian_id, cases_appendix
 if __name__ == "__main__":
-    for case in cases[:-1]:
+    for case in cases:
         for _, i in enumerate(gaussian_id):
             td = TripleDecomposition(case, 'gaussian', i)
             td.cal_avg()

@@ -169,9 +169,10 @@ class FilterManager(GT):
         return result
 
 if __name__ == "__main__":
-    from ZZZ_Result_Manager.A01_cases import cases
+    from ZZZ_Result_Manager.A01_cases import cases,cases_appendix
     from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
-    for case_id, case in enumerate(cases[:-1]):
+    # for case_id, case in enumerate(cases[:-1]):
+    for case_id, case in enumerate(cases_appendix):
         rm = RM(case)
         Lfs = rm.result_table.get(2)['Lfs']
         fm = FilterManager(case)
