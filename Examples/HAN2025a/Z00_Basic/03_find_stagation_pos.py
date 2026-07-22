@@ -45,6 +45,7 @@ for case in cases1:
 
 #Type 2: Specify the center of the grid as the center of the flow field.
 cases2 = ['Case01', 'Case02', 'Case03', 'Case04', 'Case05', 'Case06']
+cases2 = ['Case_FanW_All100']
 for case in cases2:
     pBase.load_case(case)
     Nx = pBase.CaseInfo.Nx

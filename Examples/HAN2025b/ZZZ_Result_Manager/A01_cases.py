@@ -11,5 +11,5 @@ coeffs_to_eta = [80,70,60,50,40,30,20]
 
 Lf_labels = [rf'$L_f={i}\eta$' for i in coeffs_to_eta]
 
-deg_interval = 20
+deg_interval = 10
 degs = [[(i,i+deg_interval),] for i in range(0,180,deg_interval)]

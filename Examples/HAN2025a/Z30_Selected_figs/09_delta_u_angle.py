@@ -21,6 +21,18 @@ fig_path = getplotpath()
 result_fig = f"{fig_path}/09_delta_u_angle"
 quickset()
 
+linestyles = [
+    '-',
+    (6, (19, 3)),                  # 长破线，24
+    (3.5, (14, 3, 2, 3)),            # 一点划线，24
+    (3, (11, 3, 2, 3, 2, 3)),       
+    '-',
+    (6, (19, 3)),                  # 长破线，24
+    (3.5, (14, 3, 2, 3)),           # 一点划线，24
+    (3, (11, 3, 2, 3, 2, 3)),  
+]
+
+
 fig = PlotFigure(
     nrows=1,
     ncols=3,
@@ -72,8 +84,8 @@ for case_id, case in enumerate(A01.cases[:-1]):
         value_sub2 = jump_u/nor_tmp
         yerr.append(np.abs(value_sub1-value_sub2)/2)
 
-    fig.plot(fig_id,x,y,label=A01.case_labels[case_id], color=colors[case_id],
-            yerr=yerr,capsize=5)
+    fig.plot(fig_id,x,y,label=A01.case_labels[case_id], color=colors[case_id], linestyle=linestyles[case_id],
+            yerr=yerr,elinewidth=0.5)
 
 print(A01.Lf_label[filter_id-1])
 
@@ -107,8 +119,8 @@ for case_id, case in enumerate(A01.cases[:-1]):
         jump_u = sl.result_json.get(0)['jump_u']
         value_sub2 = jump_u/nor_tmp
         yerr.append(np.abs(value_sub1-value_sub2)/2)
-    fig.plot(fig_id,x,y,color=colors[case_id],
-             yerr=yerr,capsize=5)
+    fig.plot(fig_id,x,y,color=colors[case_id],linestyle=linestyles[case_id],
+             yerr=yerr,elinewidth=0.5)
 print(A01.Lf_label[filter_id-1])
 
 fig_id = 2
@@ -139,22 +151,28 @@ for case_id, case in enumerate(A01.cases[:-1]):
         jump_u = sl.result_json.get(0)['jump_u']
         value_sub2 = jump_u/nor_tmp
         yerr.append(np.abs(value_sub1-value_sub2)/2)
-    fig.plot(fig_id,x,y,color=colors[case_id],
-             yerr=yerr,capsize=5)
+    fig.plot(fig_id,x,y,color=colors[case_id], linestyle=linestyles[case_id],
+             yerr=yerr,elinewidth=0.5)
 print(A01.Lf_label[filter_id-1])
 
 for i in range(3):
     fig.set_panel_label(i)
-    fig.set_axis(i,ylim=(0,3))
+    fig.set_axis(i,ylim=(1,2))
     fig.set_axis(i,xlim=(0,180),xticks=[0,45,90,135,180],minor_xticks=None)
-fig.set_label(0,xlabel=r'$\theta~\mathrm{(deg)}$')
-fig.set_label(1,xlabel=r'$\theta~\mathrm{(deg)}$')
-fig.set_label(2,xlabel=r'$\theta~\mathrm{(deg)}$')
-fig.set_label(0,labelpad=15, ylabel=r'$\Delta u(u_{1,\mathrm{rms}}^3L_{u_1}^{-1} \delta_s)^{-1/3}$')
+fig.set_label(0,xlabel=r'$\theta~\mathrm{(deg.)}$')
+fig.set_label(1,xlabel=r'$\theta~\mathrm{(deg.)}$')
+fig.set_label(2,xlabel=r'$\theta~\mathrm{(deg.)}$')
+fig.set_label(0,labelpad=15, ylabel=r'$(\Delta u/u_{\mathrm{rms}})/(\delta_s/L_u)^{1/3}$')
 # ---------------------------
 # legend (ONLY in reserved column)
 # ---------------------------
-fig.add_legend_bottom_rowmajor_manual(x=0.56,y=0.04,ncol=7,xpad=0.14,handlelength=0.02,fontsize=16)
+fig.legend_bottom(
+    ncol=7,
+    y=0.05,
+    fontsize=16,
+    columnspacing=1.4,
+    handlelength=2.2,
+)
 # ---------------------------
 # save & show
 # ---------------------------

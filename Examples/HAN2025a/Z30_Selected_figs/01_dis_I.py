@@ -9,12 +9,23 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from Q01_Plot.L01_piv_plot import PlotFigure 
-from Q01_Plot.C00_cfg_for_cases import colors, linewidths
+from Q01_Plot.C00_cfg_for_cases import colors, linewidths, linestyles, markers
 from Q01_Plot.L00_tools import rm_and_create_directory, quickset, getplotpath
 
 import ZZZ_Result_Manager.A01_cases as A01
 from Z11_Triple_Decomposition.G01_triple_decomposition import TripleDecomposition as TD
 from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
+
+linestyles = [
+    '-',
+    (6, (19, 3)),                  # 长破线，24
+    (3.5, (14, 3, 2, 3)),            # 一点划线，24
+    (3, (11, 3, 2, 3, 2, 3)),       
+    '-',
+    (6, (19, 3)),                  # 长破线，24
+    (3.5, (14, 3, 2, 3)),           # 一点划线，24
+    (3, (11, 3, 2, 3, 2, 3)),  
+]
 
 figformat = ".jpg"
 fig_path = getplotpath()
@@ -29,8 +40,8 @@ fig = PlotFigure(
     panel_fontsize= 20,
     panel_offset=(-0.16,1.06),
     right_legend=True,     # reserve legend column
-    left=0.3,
-    right=0.7,
+    left=0.33,
+    right=0.73,
     bottom=0.18,
     top=0.85,
     wspace=0.6,
@@ -63,17 +74,17 @@ for curve_id, filter_param in enumerate(plotted_filter_param):
     td.load_avg()
     value_sub2 = td.avg_intensity_shear[left:right,central_Y]
     yerr = np.abs(value_sub1-value_sub2)/2
-    fig.plot(fig_id,x,y, label=A01.Lf_label[filter_id],color=colors[curve_id], yerr=yerr, capsize=4,capthick=0.8,elinewidth=0.8, every=12)
+    fig.plot(fig_id,x,y, label=A01.Lf_label[filter_id],color=colors[curve_id], linestyle = linestyles[curve_id], yerr=yerr,elinewidth=0.5, every=10)
 
 
 
 fig.set_axis(0,xlim=(-50,50),ylim=(0,5000))
 fig.set_label(0,xlabel=r'$x~\mathrm{(mm)}$')
-fig.set_label(0,ylabel=r'$\left\langle \widetilde{I}_\mathrm{S}\right\rangle~\mathrm{(s^{-1})}$',labelpad=12)
+fig.set_label(0,ylabel=r'$\left\langle \tilde{I}_\mathrm{S}\right\rangle~\mathrm{(s^{-1})}$',labelpad=12)
 # ---------------------------
 # legend (ONLY in reserved column)
 # ---------------------------
-fig.legend(bbox_to_anchor=(-2.2, 0.5), handlelength= 1.5, fontsize=16)
+fig.legend(bbox_to_anchor=(-2.2, 0.5), handlelength= 2.2, fontsize=16)
 # fig.add_legend_inside(handlelength= 1.5,fontsize=16)
 # ---------------------------
 # save & show

@@ -1,0 +1,84 @@
+''' 
+=========================
+= Author:   HAN Zexu    =
+= Version:  1.0         =
+= Date:     2026/02/20  =
+=========================
+'''
+
+import numpy as np
+import matplotlib.pyplot as plt
+from Q01_Plot.L01_piv_plot import PlotFigure 
+from Q01_Plot.C00_cfg_for_cases import colors, linewidths, markers, markersizes
+from Q01_Plot.L00_tools import rm_and_create_directory, quickset, getplotpath
+
+import ZZZ_Result_Manager.A01_cases as A01
+from Z23_Shear_Layer.G01_shear_layer import ShearLayer as SL
+from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
+
+figformat = ".jpg"
+fig_path = getplotpath()
+result_fig = f"{fig_path}/08_Ar_Lf"
+quickset()
+
+fig = PlotFigure(
+    nrows=1,
+    ncols=1,
+    figsize=(31, 10),      # cm, physical size is sacred
+    figsize_unit="cm",
+    panel_fontsize= 20,
+    panel_offset=(-0.16,1.06),
+    right_legend=True,     # reserve legend column
+    left=0.3,
+    right=0.7,
+    bottom=0.18,
+    top=0.85,
+    wspace=0.6,
+    dpi=600
+)
+
+# Lf = 80,70,60 eta
+MFC_all100_x = [80,70,60] 
+MFC_all100_y = [4.434957e+00,4.274824e+00,4.220420e+00]
+
+cases_sub1 = [case + '_even' for case in A01.cases]
+cases_sub2 = [case + '_odd' for case in A01.cases]
+
+fig_id = 0
+for case_id, case in enumerate(A01.cases[:-1]):
+    x=[]
+    y=[]
+    rm = RM(case) 
+    L11 = rm.result_table.get(1)['L11']
+    yerr=[]
+    for filter_id, filter_param in enumerate(A01.gaussian_id):       
+        sl = SL(A01.cases[case_id],'gaussian',filter_param)
+        sl.load_result(None)
+        eta = sl.result_json.get(0)['eta']
+        Lf = sl.result_json.get(0)['Lf_in_mm']/1000
+        Ar = sl.result_json.get(0)['AR']
+        delta_s_in_m = sl.result_json.get(0)['delta_s_in_mm']/1000
+        x.append(delta_s_in_m/eta)
+        y.append(Ar)
+
+
+
+    fig.plot(fig_id,x,y,label=A01.case_labels[case_id], color=colors[case_id], marker=markers[case_id],markersize = markersizes[case_id],ifmarker=True,
+            capsize=2.5,elinewidth=0.5,capthick=0.5,markerfacecolor='none')
+fig.plot(fig_id,MFC_all100_x,MFC_all100_y, color='k',label='Han et al.', linestyle = 'None',
+        marker=markers[case_id],markersize = markersizes[case_id],ifmarker=True,capsize=5,capthick=0.5,)
+
+fig.set_axis(0,xlim=(10,1000),ylim=(3,7),xlog=True)
+
+fig.set_label(0,xlabel=r'$\delta_S/\eta$')
+fig.set_label(0,ylabel=r'$A_R$',labelpad= 15)
+# ---------------------------
+# legend (ONLY in reserved column)
+# ---------------------------
+# fig.legend(bbox_to_anchor=(-2.2, 0.5), handlelength= 1.5, fontsize=16)
+fig.legend(bbox_to_anchor=(-2.2, 0.5), handlelength= 1.8, fontsize=16)
+# fig.add_legend_bottom_rowmajor_manual(x=0.56,y=0.04,ncol=7,xpad=0.14,handlelength=0.02,fontsize=16)
+# ---------------------------
+# save & show
+# ---------------------------
+fig.save(result_fig + figformat)

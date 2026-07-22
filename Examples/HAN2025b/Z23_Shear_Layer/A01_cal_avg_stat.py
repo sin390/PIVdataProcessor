@@ -19,6 +19,9 @@ from ZZZ_Result_Manager.A01_cases import cases_select, cases_select_f, cases_sel
 from ZZZ_Result_Manager.A01_cases import degs
 
 degs += [None,]
+
+Cth = 1.5
+
 for filter_id,coeff in enumerate(coeffs_to_eta):
     filter_id += 1
     log_id = 40 + filter_id
@@ -31,7 +34,7 @@ for filter_id,coeff in enumerate(coeffs_to_eta):
         nu = rm.result_table.get(3)['kinetic_viscosity']
         I_S_avg = sl.td.result_json.get(0)['avg_intensity_SH']      
         for deg in degs:
-            sl.load_result(deg)
+            sl.load_result(deg,Cth)
             X = sl.X_BRF[0]
             ic, jc = len(X[:,0])//2, len(X[0,:])//2
             norm_I_S = (sl.avg_Is_BRF-I_S_avg) / (sl.avg_Is_BRF[ic,jc]-I_S_avg)

@@ -9,7 +9,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from Q01_Plot.L01_piv_plot import PlotFigure 
-from Q01_Plot.C00_cfg_for_cases import colors, linewidths
+from Q01_Plot.C00_cfg_for_cases import colors, linewidths, markers, markersizes
 from Q01_Plot.L00_tools import rm_and_create_directory, quickset, getplotpath
 
 import ZZZ_Result_Manager.A01_cases as A01
@@ -64,8 +64,8 @@ for case_id, case in enumerate(A01.cases[:-1]):
         value_sub2 = sl.result_json.get(0)['jump_u']/urms1
         yerr.append(np.abs(value_sub1-value_sub2)/2)
 
-    fig.plot(fig_id,x,y,label=A01.case_labels[case_id],marker='^',markersize = 4,ifmarker=True, color=colors[case_id],
-             yerr=yerr,capsize=5)
+    fig.plot(fig_id,x,y,label=A01.case_labels[case_id],marker=markers[case_id],markersize = markersizes[case_id],ifmarker=True, color=colors[case_id],
+             yerr=yerr,capsize=5,capthick=0.5, markerfacecolor='none')
 
 
 fig_id = 1
@@ -100,16 +100,17 @@ for case_id, case in enumerate(A01.cases[:-1]):
         value_sub2 = jump_u/tmp
         yerr.append(np.abs(value_sub1-value_sub2)/2)
 
-    fig.plot(fig_id,x,y, color=colors[case_id],marker='^',markersize = 4,ifmarker=True,yerr=yerr,capsize=5)
+    fig.plot(fig_id,x,y, color=colors[case_id],marker=markers[case_id],markersize = markersizes[case_id],ifmarker=True,yerr=yerr,capsize=5,capthick=0.5,
+             markerfacecolor='none')
 
 for i in range(2):
     fig.set_panel_label(i)
-fig.set_axis(0,xlim=(0,0.24),ylim=(0,1.5))
-fig.set_axis(1,xlim=(0,0.24),ylim=(0,3))
-fig.set_label(0,xlabel=r'$\delta_S/L_{u_1}$')
-fig.set_label(0,ylabel=r'$\Delta u/u_{1,\mathrm{rms}}$',labelpad= 15)
-fig.set_label(1,xlabel=r'$\delta_S/\eta$')
-fig.set_label(1,ylabel=r'$\Delta u(u_{1,\mathrm{rms}}^3L_{u_1}^{-1} \delta_s)^{-1/3}$',labelpad= 15)
+fig.set_axis(0,xlim=(0.06,0.22),ylim=(0,1.5))
+fig.set_axis(1,xlim=(0.06,0.22),ylim=(1,2))
+fig.set_label(0,xlabel=r'$\delta_S/L_{u}$')
+fig.set_label(0,ylabel=r'$\Delta u/u_{\mathrm{rms}}$',labelpad= 15)
+fig.set_label(1,xlabel=r'$\delta_S/L_{u}$')
+fig.set_label(1,ylabel=r'$(\Delta u/u_{\mathrm{rms}})/(\delta_S/L_{u})^{1/3}$',labelpad= 15)
 # ---------------------------
 # legend (ONLY in reserved column)
 # ---------------------------

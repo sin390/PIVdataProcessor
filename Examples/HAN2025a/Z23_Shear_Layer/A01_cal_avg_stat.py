@@ -15,14 +15,16 @@ from Z23_Shear_Layer.G01_shear_layer import ShearLayer as SL
 from Z23_Shear_Layer.T02_find_crossing import find_threshold_crossings_quadratic_minimal
 from Z23_Shear_Layer.T03_ellipse_fitting import fit_axis_aligned_ellipse_with_fixed_center
 from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
-from ZZZ_Result_Manager.A01_cases import cases, gaussian_id
+from ZZZ_Result_Manager.A01_cases import cases, gaussian_id, cases_appendix
 from ZZZ_Result_Manager.A01_cases import degs
 
 cases = cases[:-1]
+# cases = cases_appendix
 
 Cth = 1.5
 
 degs += [None,]
+degs = [None]
 for filter_id, filter_param in enumerate(gaussian_id):
     log_id = 40 + filter_param
     for case_id, case in enumerate(cases):
