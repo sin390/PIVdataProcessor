@@ -39,6 +39,7 @@ for case_id, case in enumerate(cases_select):
     lamda = avg_urms/dudx_rms
     Re_lamda =avg_urms*lamda/viscosity
     rm.result_table.set(result_id, lamda=lamda, Re_lamda=Re_lamda)   
+    rm.result_table.set(result_id, ratio_lamda_eta=lamda/eta)
 
     pBase.load_case(cases_select_f[case_id])
     dx_f = pBase.X[0,1,1]-pBase.X[0,0,0]
@@ -47,3 +48,4 @@ for case_id, case in enumerate(cases_select):
     pBase.load_case(cases_select_w[case_id])
     dx_w = pBase.X[0,1,1]-pBase.X[0,0,0]
     rm.result_table.set(result_id, relative_resolution_w=2*dx_w/1000/eta)
+    rm.result_table.set(result_id, relative_lamda_w=2*dx_w/1000/lamda)

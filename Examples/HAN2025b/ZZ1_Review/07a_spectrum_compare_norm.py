@@ -37,7 +37,7 @@ fig = PlotFigure(
 
 fig_id = 0
 # for case_id, case in enumerate(A01.cases_select):
-case_id = 2
+case_id = 1
 
 ds = DS(A01.cases_select_f[case_id], 'gaussian',0)
 eta = ds.result_json.get(0)['eta']

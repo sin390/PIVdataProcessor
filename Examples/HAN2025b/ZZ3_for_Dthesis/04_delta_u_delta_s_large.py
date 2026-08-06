@@ -20,14 +20,24 @@ from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
 figformat = ".jpg"
 fig_path = getplotpath()
 wh = WH(['coef_eta',r'$\delta_S/\eta$',r'$\Delta u/(\varepsilon \delta_s)^{1/3}$'])
-case_id = 0
+case_id = 2
 case = A01.cases_select[case_id]
 print(case)
-rm = RM(case) 
 
-eta = rm.result_table.get(3)['eta']
-viscosity = rm.result_table.get(3)['kinetic_viscosity']
-eps = rm.result_table.get(3)['eps']
+urms = np.array([0.472,0.388,0.971])
+vrms = np.array([0.415,0.398,0.713])
+Lu = np.array([57.166,50.197,104.72])/1000
+Lv = np.array([45.097,60.168,66.529])/1000
+k2 = (urms**2 + vrms**2+ vrms**2)/2
+U = np.sqrt(k2*2/3)
+L = (Lu+Lv+Lv)/3
+L = np.array([60,60,60])/1000
+A=1
+dissipationRate = A *U**3/L
+viscosity=1.6e-5
+rm = RM(case) 
+eps = dissipationRate[case_id]
+eta = (viscosity)**(3/4)*eps**(-1/4)
 velocity_eta = (viscosity*eps)**(0.25)
 coefs = []
 x=[]

@@ -95,7 +95,7 @@ class EnergySpectrum(pTS):
 if __name__ == "__main__":
     import ZZZ_Result_Manager.A01_cases as A01
     cases = A01.cases_f+A01.cases_w
-    cases = [f'{case}_sub2' for case in cases]
+    # cases = [f'{case}_sub2' for case in cases]
     ESs = [() for _ in range(len(cases))]
     for case_id in range(len(cases)):
         ESs[case_id] = EnergySpectrum(cases[case_id])

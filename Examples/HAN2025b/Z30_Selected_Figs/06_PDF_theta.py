@@ -44,7 +44,7 @@ fig_id = 0
 filter = 'gaussian'
 case_id = fig_id
 for Lf_id, _ in enumerate(A01.coeffs_to_eta):
-    pdf = PDF(A01.cases_select_f[case_id], filter, Lf_id+1)
+    pdf = PDF(A01.cases_select_w[case_id], filter, Lf_id+1)
     pdf.load_result()
     x = pdf.PDF_x
     y = pdf.PDF_y
@@ -54,7 +54,7 @@ fig_id = 1
 filter = 'gaussian'
 case_id = fig_id
 for Lf_id, _ in enumerate(A01.coeffs_to_eta):
-    pdf = PDF(A01.cases_select_f[case_id], filter, Lf_id+1)
+    pdf = PDF(A01.cases_select_w[case_id], filter, Lf_id+1)
     pdf.load_result()
     x = pdf.PDF_x
     y = pdf.PDF_y
@@ -64,7 +64,7 @@ fig_id = 2
 filter = 'gaussian'
 case_id = fig_id
 for Lf_id, _ in enumerate(A01.coeffs_to_eta):
-    pdf = PDF(A01.cases_select_f[case_id], filter, Lf_id+1)
+    pdf = PDF(A01.cases_select_w[case_id], filter, Lf_id+1)
     pdf.load_result()
     x = pdf.PDF_x
     y = pdf.PDF_y
@@ -73,7 +73,7 @@ for Lf_id, _ in enumerate(A01.coeffs_to_eta):
 
 for i in range(3):
     fig.set_panel_label(i)
-    fig.set_axis(i,ylim=(0,0.01),yticks=[0,0.005,0.01])
+    fig.set_axis(i,ylim=(0 ,0.01),yticks=[0,0.005,0.01])
     fig.set_axis(i,xlim=(0,180),xticks=[0,45,90,135,180],minor_xticks=None)
 fig.set_label(0,xlabel=r'$\theta~\mathrm{(deg)}$')
 fig.set_label(1,xlabel=r'$\theta~\mathrm{(deg)}$')
