@@ -132,7 +132,7 @@ marker_size = 6
 fig_id = 0
 fig.plot(fig_id, r_over_Lu_plot, Pi_meanu_n_plot, yerr=err_meanu_n_plot/2, every=every,
           color='r', marker='^', ifmarker=True, markerfacecolor='white',
-          markersize = marker_size, label=r"$\Pi_{\langle u \rangle}$")
+          markersize = marker_size, label=r"$\Pi_{\langle U \rangle}$")
 fig.plot(fig_id, r_over_Lu_plot, Pi_uprime_n_plot, yerr=err_uprime_n_plot/2, every=every,
           color='b', marker='o', ifmarker=True, markerfacecolor='white',
           markersize = marker_size, label=r"$\Pi_{u}$")
@@ -141,17 +141,17 @@ fig.get_ax(fig_id).axhline(0, color='k', linewidth=0.5)
 fig_id = 1
 fig.plot(fig_id, r_over_Lv_plot, Pi_meanv_n_plot, yerr=err_meanv_n_plot, every=every,
           color='r', marker='^', ifmarker=True, markerfacecolor='white',
-          markersize = marker_size, label=r"$\Pi_{\langle v \rangle}$")
+          markersize = marker_size, label=r"$\Pi_{\langle V \rangle}$")
 fig.plot(fig_id, r_over_Lv_plot, Pi_vprime_n_plot, yerr=err_vprime_n_plot, every=every,
           color='b', marker='o', ifmarker=True, markerfacecolor='white',
           markersize = marker_size, label=r"$\Pi_{v}$")
 fig.get_ax(fig_id).axhline(0, color='k', linewidth=0.5)
 
 fig.set_axis(0, xlim=(0,1), ylim=(-1,2))
-fig.set_axis(1, xlim=(0,1), ylim=(-1.5,1.5))
+fig.set_axis(1, xlim=(0,1), ylim=(-1.6,1.6))
 fig.set_label(0, xlabel=r'$r/L_u$', ylabel=r'$\Pi/(u_\mathrm{rms}^3L_u)$')
 fig.set_label(1, xlabel=r'$r/L_v$', ylabel=r'$\Pi/(v_\mathrm{rms}^3L_v)$')
-fig.add_legend_inside(handlelength=0,fontsize=18,loc='best')
+fig.add_legend_inside(handlelength=0,fontsize=18,loc='upper left')
 for fig_id in range(2):
     fig.set_panel_label(fig_id)
 
