@@ -13,9 +13,9 @@ from pivdataprocessor.A01_toolbox import float_precsion
 
 
 #Type 1: Select a region (in mm) where two-point statistics can be applied.
-cases1 = []
-distances_x = []
-distances_y = [] 
+cases1 = ['Case04','Case04_even','Case04_odd']
+distances_x = [24,24,24]
+distances_y = [12,12,12] 
 
 for case_id in range(len(cases1)):
     pBase.load_case(cases1[case_id])
@@ -37,8 +37,8 @@ for case_id in range(len(cases1)):
 
 
 #Type 2: Two-point statistics can be applied across the measurement region.
-cases2 = ['Case01','Case02','Case03','Case04','Case05','Case06']
-cases2 = ['Case01XY_Z0_Ethanol']
+# cases2 = ['Case01','Case02','Case03','Case04','Case05','Case06']
+cases2 = []
 for case in cases2:
     pBase.load_case(case)   
     pBase.CaseInfo.Uniform_Range = pBase.CaseInfo.Effective_Range
