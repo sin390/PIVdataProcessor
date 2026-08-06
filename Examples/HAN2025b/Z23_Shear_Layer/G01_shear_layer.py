@@ -23,7 +23,6 @@ class ShearLayer(GT):
         self.td = TD(casename, filter, filter_id)
         self.td.load_avg()
 
-
     def prepare_BRF_coordinate(self, zeta_max, N = 60, alpha = 2.5):
         X_BRF = np.zeros((2,2*N+1,2*N+1))
         n = np.arange(-N, N+1)
@@ -35,16 +34,16 @@ class ShearLayer(GT):
         self.make_sure_directory(self.result_path + self.td.vfh.middle_path())
         np.save(self.result_path + self.td.vfh.middle_path() + '/X_LSL.npy', X_BRF)
 
-    def calculate_general(self, deg_ranges=((0,30),),coef_threshold=2):
+    def calculate_general(self, deg_ranges=((0,30),), Cth = 1.5):
         if deg_ranges == None:
-            result_path = self.result_path + self.td.vfh.middle_path() + '/general' 
-            self.rm_and_create_directory(result_path)
+            result_path = self.result_path + self.td.vfh.middle_path() + '/general'
         else:
             deg_folder = '/deg'
             for deg_range in deg_ranges:
                 deg_folder = deg_folder + f'_{deg_range[0]:.1f}to{deg_range[1]:.1f}'
             result_path = self.result_path + self.td.vfh.middle_path() + deg_folder
-            self.rm_and_create_directory(result_path)
+        result_path = result_path+ f'/Cth_{int(Cth*1000)}'
+        self.rm_and_create_directory(result_path)
 
         self.result_json = PT(result_path+"/result.json")
         identified_LSL_number = 0
@@ -58,7 +57,7 @@ class ShearLayer(GT):
         left, right, bottom, up = self.td.vfh.unpackrange(self.td.effctive_range)
         for run_id in range(len(self.td.frames_in_runs)):
             for frame_id in range(self.td.frames_in_runs[run_id]):
-                self.td.cal_and_identify_SH_layer_frame(run_id, frame_id, coef_threshold=coef_threshold, maximum_window=5)
+                self.td.cal_and_identify_SH_layer_frame(run_id, frame_id, coef_threshold=Cth)
                 identified_pos = self.td.identified_pos.copy()
                 if deg_ranges is not None:
                     dir_e2x = self.td.Q[0,1]
@@ -123,7 +122,7 @@ class ShearLayer(GT):
         self.result_json.set(0,identified_LSL_number = identified_LSL_number)
         self.load_result(deg_ranges)
 
-    def load_result(self, deg_ranges=None):
+    def load_result(self, deg_ranges=None, Cth = 1.5):
         self.X_BRF = np.load(self.result_path + self.td.vfh.middle_path() + '/X_LSL.npy')
         if deg_ranges == None:
             result_path = self.result_path + self.td.vfh.middle_path() + '/general'
@@ -132,6 +131,7 @@ class ShearLayer(GT):
             for deg_range in deg_ranges:
                 deg_folder = deg_folder + f'_{deg_range[0]:.1f}to{deg_range[1]:.1f}'
             result_path = self.result_path + self.td.vfh.middle_path() + deg_folder
+        result_path = result_path+ f'/Cth_{int(Cth*1000)}'
         self.result_json = PT(result_path+"/result.json")
 
         self.avg_u_BRF = np.load(result_path+'/avg_u_BRF.npy')
@@ -141,8 +141,9 @@ class ShearLayer(GT):
 
 
 
+
 def worker(args):
-    case, filter, p, Lf, coef_threshold, deg_ranges  = args
+    case, filter, p, Lf, cth, deg_ranges  = args
     sl = ShearLayer(case, filter, filter_id=p)
     if filter == 'gaussian':
         coef = 7.5
@@ -150,7 +151,7 @@ def worker(args):
         coef = 4.5
     sl.prepare_BRF_coordinate(coef*Lf, N=100)
     print (f'Started:{args}')
-    sl.calculate_general(deg_ranges,coef_threshold=coef_threshold)
+    sl.calculate_general(deg_ranges, Cth=cth)
     return print (f'Finished:{args}')
 
 
@@ -159,6 +160,7 @@ if __name__ == '__main__':
     from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
     from Z11_Dissipation_Rate.G01_dissipation_rate import DissipationRate as DS
     from ZZZ_Result_Manager.A01_cases import cases_select, cases_select_f,cases_select_w, coeffs_to_eta
+    cth = 1.5
 
     filter = 'gaussian'
     for coeff_id, coeff in enumerate(coeffs_to_eta):
@@ -170,7 +172,7 @@ if __name__ == '__main__':
                     ds = DS(cases_select_f[case_id], 'gaussian',-1)
                     eta = ds.result_json.get(0)['eta']*1000
                     Lf = eta * coeff
-                    tasks.append((cases_select_w[case_id], filter, coeff_id, Lf, 1.5, None))
+                    tasks.append((cases_select_w[case_id], filter, coeff_id, Lf, cth, None))
             results = pool.map(worker, tasks)  
 
         
@@ -182,6 +184,6 @@ if __name__ == '__main__':
                         ds = DS(cases_select_f[case_id], 'gaussian',-1)
                         eta = ds.result_json.get(0)['eta']*1000
                         Lf = eta * coeff
-                        tasks.append((cases_select_w[case_id], filter, coeff_id, Lf, 1.5, deg))
+                        tasks.append((cases_select_w[case_id], filter, coeff_id, Lf, cth, deg))
                 results = pool.map(worker, tasks)  
 

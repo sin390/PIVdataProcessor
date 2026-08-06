@@ -37,7 +37,30 @@ fig = PlotFigure(
     wspace=0.3
 )
 
+external_files = [
+    './ZZ2_External_Data/JFM2024_Fig13b/Cst_e2_ST_OmegaSH_nfil01.txt',
+    './ZZ2_External_Data/JFM2024_Fig13b/Cst_e2_ST_OmegaSH_nfil03.txt',
+    './ZZ2_External_Data/JFM2024_Fig13b/Cst_e2_ST_OmegaSH_nfil05.txt',
+    './ZZ2_External_Data/JFM2024_Fig13b/Cst_e2_ST_OmegaSH_nfil07.txt'
+]
+external_labels = [r'$L_F=343\eta$',r'$L_F=401\eta$',r'$L_F=458\eta$',r'$L_F=516\eta$']
+external_markers = ['o','^','s','p']
+external_marker_size = [4,5,4,5]
+
+
+
+
 fig_id = 0
+fig.plot(fig_id,[],[], ifmarker=False,linestyle = 'None', label='Present study', color=colors[-1])
+fig.plot(fig_id,[],[], ifmarker=False,linestyle = 'None', label=' ', color=colors[-1])
+for file_id, file in enumerate(external_files):
+    data = np.loadtxt(file, skiprows=1)
+    zeta2_vs_L_fil,Omega_SH,Omega_SH_vs_Omega_SH0,ISHf_vs_ISHf,u_vs_dU = data.T
+    x = zeta2_vs_L_fil
+    y = Omega_SH_vs_Omega_SH0
+    fig.plot(fig_id,x,y, ifmarker=True, marker = external_markers[file_id],markersize = external_marker_size[file_id], 
+             linestyle = 'None', mfc='none', color=colors[-1])
+
 filter = 'gaussian'
 case_id = fig_id
 for Lf_id, _ in enumerate(A01.coeffs_to_eta):
@@ -51,7 +74,22 @@ for Lf_id, _ in enumerate(A01.coeffs_to_eta):
     y = mag[ic,:]
     fig.plot(fig_id,x,y,label=A01.Lf_labels[Lf_id], color=colors[Lf_id])
 
+fig.plot(fig_id,[],[], ifmarker=False,linestyle = 'None', label='Watanabe et al. (2024)', color=colors[-1])
+fig.plot(fig_id,[],[], ifmarker=False,linestyle = 'None', label=' ', color=colors[-1])
+for file_id, file in enumerate(external_files):
+    fig.plot(fig_id,[],[], ifmarker=True, marker = external_markers[file_id],markersize = external_marker_size[file_id]+2,linestyle = 'None',
+            mfc='none', label=external_labels[file_id], color=colors[-1])
+
+
 fig_id = 1
+# for file_id, file in enumerate(external_files):
+#     data = np.loadtxt(file, skiprows=1)
+#     zeta2_vs_L_fil,Omega_SH,Omega_SH_vs_Omega_SH0,ISHf_vs_ISHf,u_vs_dU = data.T
+#     x = zeta2_vs_L_fil
+#     y = Omega_SH_vs_Omega_SH0
+#     fig.plot(fig_id,x,y, ifmarker=True, marker = external_markers[file_id],markersize = external_marker_size[file_id], 
+#              linestyle = 'None', mfc='none', color=colors[-1])
+    
 filter = 'gaussian'
 case_id = fig_id
 for Lf_id, _ in enumerate(A01.coeffs_to_eta):
@@ -65,7 +103,17 @@ for Lf_id, _ in enumerate(A01.coeffs_to_eta):
     y = mag[ic,:]
     fig.plot(fig_id,x,y,color=colors[Lf_id])
 
+
+
 fig_id = 2
+# for file_id, file in enumerate(external_files):
+#     data = np.loadtxt(file, skiprows=1)
+#     zeta2_vs_L_fil,Omega_SH,Omega_SH_vs_Omega_SH0,ISHf_vs_ISHf,u_vs_dU = data.T
+#     x = zeta2_vs_L_fil
+#     y = Omega_SH_vs_Omega_SH0
+#     fig.plot(fig_id,x,y, ifmarker=True, marker = external_markers[file_id],markersize = external_marker_size[file_id], 
+#              linestyle = 'None', mfc='none', color=colors[-1])
+    
 filter = 'gaussian'
 case_id = fig_id
 for Lf_id, _ in enumerate(A01.coeffs_to_eta):
@@ -86,11 +134,11 @@ for i in range(3):
 fig.set_label(0,xlabel=r'$\boldsymbol{\zeta}_{y}/L_{F}$')
 fig.set_label(1,xlabel=r'$\boldsymbol{\zeta}_{y}/L_{F}$')
 fig.set_label(2,xlabel=r'$\boldsymbol{\zeta}_{y}/L_{F}$')
-fig.set_label(0,labelpad=15, ylabel=r'$\left\langle\widetilde{\omega}_S \right\rangle_\mathrm{norm}$')
+fig.set_label(0,labelpad=15, ylabel=r'$\overline{\tilde{\omega}_S} / (\overline{\tilde{\omega}_S})_0$')
 # ---------------------------
 # legend (ONLY in reserved column)
 # ---------------------------
-fig.add_legend_bottom_rowmajor_manual(x=0.46,y=0.05,ncol=7,xpad=0.14,handlelength=0.02,fontsize=16)
+fig.add_legend_bottom_rowmajor_manual(x=0.455,y=0.08,ncol=9,xpad=0.115,handlelength=0.02,fontsize=16)
 # ---------------------------
 # save & show
 # ---------------------------

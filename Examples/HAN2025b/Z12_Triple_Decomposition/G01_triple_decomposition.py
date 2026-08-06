@@ -55,7 +55,7 @@ class TripleDecomposition(GH):
         self.intensity_omega = np.zeros_like(self.vfh.u[0])
         self.intensity_mag_omega = np.zeros_like(self.vfh.u[0])
 
-    def cal_frame(self, run_id, frame_id):
+    def cal_frame(self, run_id, frame_id, if_adjust_direction = True):
         self.vfh.load_field(run_id, frame_id)
         dudx = self.vfh.dudx
         self.omega = dudx[1,0]-dudx[0,1]
@@ -72,12 +72,18 @@ class TripleDecomposition(GH):
 
 
         'Step2: conduct TDM'
-        # self.conduct_TDM()
-        self.TDM_with_adjusted_direction()
+        if if_adjust_direction == True:
+            self.TDM_with_adjusted_direction()
+            self.intensity_shear = np.sqrt(2 * np.sum(self.LAB_dUdX_shear**2, axis=(0,1)))
+            self.intensity_elongation = np.sqrt(2 * np.sum(self.LAB_dUdX_elongation**2, axis=(0,1)))
+            self.intensity_rotation = np.sqrt(2 * np.sum(self.LAB_dUdX_rotation**2, axis=(0,1)))
+        else:
+            self.conduct_TDM()
+            self.intensity_shear = np.sqrt(2 * np.sum(self.BRF_dUdX_shear**2, axis=(0,1)))
+            self.intensity_elongation = np.sqrt(2 * np.sum(self.BRF_dUdX_elongation**2, axis=(0,1)))
+            self.intensity_rotation = np.sqrt(2 * np.sum(self.BRF_dUdX_rotation**2, axis=(0,1)))
 
-        self.intensity_shear = np.sqrt(2 * np.sum(self.LAB_dUdX_shear**2, axis=(0,1)))
-        self.intensity_elongation = np.sqrt(2 * np.sum(self.LAB_dUdX_elongation**2, axis=(0,1)))
-        self.intensity_rotation = np.sqrt(2 * np.sum(self.LAB_dUdX_rotation**2, axis=(0,1)))
+
 
 
     def conduct_TDM(self):

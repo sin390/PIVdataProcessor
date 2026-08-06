@@ -90,7 +90,7 @@ class ReynoldsStress(pTS):
 
 import ZZZ_Result_Manager.A01_cases as A01
 if __name__ == "__main__":
-    cases = A01.cases_select_f
+    cases = A01.cases_select_w
     for case_id in range(len(cases)):
         RS = ReynoldsStress(cases[case_id])
         RS.calculate()
