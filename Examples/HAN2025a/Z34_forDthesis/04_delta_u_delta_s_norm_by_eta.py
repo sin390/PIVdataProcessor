@@ -1,0 +1,132 @@
+''' 
+=========================
+= Author:   HAN Zexu    =
+= Version:  1.0         =
+= Date:     2026/02/20  =
+=========================
+'''
+
+import numpy as np
+import matplotlib.pyplot as plt
+from Q01_Plot.L01_piv_plot import PlotFigure 
+from Q01_Plot.C00_cfg_for_cases import colors, linewidths, markers, markersizes
+from Q01_Plot.L00_tools import rm_and_create_directory, quickset, getplotpath
+
+import ZZZ_Result_Manager.A01_cases as A01
+from Z23_Shear_Layer.G01_shear_layer import ShearLayer as SL
+from ZZZ_Result_Manager.G01_result_manager import ResultManager as RM
+
+figformat = ".jpg"
+fig_path = getplotpath()
+result_fig = f"{fig_path}/04_delta_u_delta_s"
+quickset()
+
+fig = PlotFigure(
+    nrows=1,
+    ncols=1,
+    figsize=(31, 10),      # cm, physical size is sacred
+    figsize_unit="cm",
+    panel_fontsize= 20,
+    panel_offset=(-0.16,1.06),
+    right_legend=True,     # reserve legend column
+    left=0.33,
+    right=0.73,
+    bottom=0.18,
+    top=0.85,
+    wspace=0.6,
+    dpi=600
+)
+
+
+case_labels=['Case~J1','Case~J2','Case~J3','Case~J4','Case~J5','Case~J6']
+
+max_delta_s_eta = 0
+max_Lf_eta = 0
+min_delta_s_eta = 100000
+min_Lf_eta = 100000
+
+fig_id = 0
+for case_id, case in enumerate(A01.cases):
+    rm = RM(case) 
+    L11 = rm.result_table.get(1)['L11']
+    urms1 = rm.result_table.get(1)['urms']
+    x=[]
+    y=[]
+    yerr = []
+    Lf_eta = []
+    for filter_id, filter_param in enumerate(A01.gaussian_id):
+        sl = SL(A01.cases[case_id],'gaussian',filter_param)
+        sl.load_result(None)
+        jump_u = sl.result_json.get(0)['jump_u']
+        delta_s_in_m = sl.result_json.get(0)['delta_s_in_mm']/1000
+        Lf_in_m = sl.result_json.get(0)['Lf_in_mm']/1000
+        eta = sl.result_json.get(0)['eta']
+        eps = sl.result_json.get(0)['eps']
+        x.append(delta_s_in_m/eta)
+        tmp = (eps*delta_s_in_m)**(1/3)
+        y.append(jump_u/tmp) 
+        Lf_eta.append(Lf_in_m/eta)
+
+
+        # sl = SL(cases_sub1[case_id],'gaussian',filter_param)
+        # sl.load_result(None)
+        # jump_u = sl.result_json.get(0)['jump_u']
+        # delta_s_in_m = sl.result_json.get(0)['delta_s_in_mm']/1000
+        # tmp = (eps*delta_s_in_m)**(1/3)
+        # value_sub1 = jump_u/tmp
+
+        # sl = SL(cases_sub2[case_id],'gaussian',filter_param)
+        # sl.load_result(None)
+        # jump_u = sl.result_json.get(0)['jump_u']
+        # delta_s_in_m = sl.result_json.get(0)['delta_s_in_mm']/1000
+        # tmp = (eps*delta_s_in_m)**(1/3)
+        # value_sub2 = jump_u/tmp
+        # yerr.append(np.abs(value_sub1-value_sub2)/2)
+    if max(x)>max_delta_s_eta:
+        max_delta_s_eta=max(x)
+    if min(x)<min_delta_s_eta:
+        min_delta_s_eta = min(x)
+
+    if max(Lf_eta)>max_Lf_eta:
+        max_Lf_eta=max(Lf_eta)
+    if min(Lf_eta)<min_Lf_eta:
+        min_Lf_eta=min(Lf_eta)
+
+    fig.plot(fig_id,x,y, color=colors[case_id],label=case_labels[case_id],
+             marker=markers[case_id],markersize = markersizes[case_id],ifmarker=True,capsize=5,capthick=0.5,
+             markerfacecolor='none')
+
+    
+# fig.plot(fig_id,MFC_all100_x,MFC_all100_y, color='k', linestyle = 'None',
+#         marker='D',markersize = 4,ifmarker=True,capsize=5,capthick=0.5,)
+
+external_files = [
+    './Z34_forDthesis/data/all100.txt',
+    './Z34_forDthesis/data/asymgrad.txt',
+    './Z34_forDthesis/data/shear.txt'
+]
+external_labels = [r'Case~F1',r'Case~F2',r'Case~F3']
+external_markers = ['^','D','s']
+external_marker_size = [4,4,4,5]
+
+for file_id, file in enumerate(external_files):
+    print(file)
+    data = np.loadtxt(file, skiprows=1, delimiter=',')
+    _,x,y = data.T
+    fig.plot(fig_id,x,y, ifmarker=True, marker = external_markers[file_id],markersize = external_marker_size[file_id], 
+             linestyle = 'None', color=colors[file_id],label=external_labels[file_id])
+
+fig.set_axis(0,xlim=(10,1000),ylim=(0,3),xlog=True)
+fig.set_label(0,xlabel=r'$\delta_S/\eta$')
+fig.set_label(0,ylabel=r'$\Delta u/(\varepsilon \delta_s)^{1/3}$',labelpad= 15)
+# ---------------------------
+# legend (ONLY in reserved column)
+# ---------------------------
+fig.legend(bbox_to_anchor=(-2, 0.5), handlelength= 1.5, fontsize=16)
+# fig.add_legend_inside(handlelength= 1.5,fontsize=16)
+# ---------------------------
+# save & show
+# ---------------------------
+fig.save(result_fig + figformat)
+print(max_delta_s_eta,min_delta_s_eta)
+print(max_Lf_eta,min_Lf_eta)
